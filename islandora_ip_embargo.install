@@ -1,0 +1,110 @@
+<?php
+/**
+ * @file
+ * Handles the install and uninstall of islandora_ip_embargo.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function islandora_ip_embargo_schema() {
+  $schema['islandora_ip_embargo_lists'] = array(
+    'description' => 'Table that stores lists of IP ranges.',
+    'fields' => array(
+      'lid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The UID for embargo lists.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The human readable name of the list.',
+      ),
+    ),
+    'primary key' => array('lid'),
+  );
+
+  $schema['islandora_ip_embargo_ip_ranges'] = array(
+    'description' => 'Table that stores lists of IP ranges.',
+    'fields' => array(
+      'rid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The UID for IP address ranges.',
+      ),
+      'low_end' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The low end of the IP address range.',
+      ),
+      'high_end' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The high end of the IP address range.',
+      ),
+      'lid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The LID that the range belongs to.',
+      ),
+    ),
+    'foreign keys' => array(
+      'list' => array(
+        'table' => 'islandora_ip_embargo_lists',
+        'columns' => array('lid' => 'lid'),
+      ),
+    ),
+    'primary key' => array('rid'),
+  );
+
+  $schema['islandora_ip_embargo_embargoes'] = array(
+    'description' => 'Table that stores information on embargoed objects.',
+    'fields' => array(
+      'pid' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The PID of the object being embargoed.',
+      ),
+      'expiry' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'description' => "The timestamp of when the embargo should be lifted or 'never'.",
+      ),
+      'lid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The LID the object is constrained to.',
+      ),
+    ),
+    'foreign keys' => array(
+      'list' => array(
+        'table' => 'islandora_ip_embargo_lists',
+        'columns' => array('lid' => 'lid'),
+      ),
+    ),
+    'primary key' => array('pid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function islandora_ip_embargo_uninstall() {
+  $drupal_variables = array(
+    'islandora_ip_embargo_embargoed_redirect',
+  );
+  foreach ($drupal_variables as $drupal_variable) {
+    variable_del($drupal_variable);
+  }
+}
