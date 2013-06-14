@@ -72,6 +72,29 @@ function islandora_ip_embargo_manage_lists_form($form, &$form_state) {
 }
 
 /**
+ * Will set error if the lists to be deleted have embargoes or ranges.
+ *
+ * @param array $form
+ *   The Drupal form definition.
+ * @param array $form_state
+ *   The Drupal form state.
+ */
+function islandora_ip_embargo_manage_lists_form_validate($form, &$form_state) {
+  module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
+  foreach ($form_state['values']['Lists'] as $list_identifier => $is_checked) {
+    if ($is_checked) {
+      $embargoes_results = islandora_ip_embargo_get_embargos($list_identifier);
+      if ($embargoes_results->rowCount()) {
+        form_set_error('list', t("You can't delete a list with embargoes."));
+      }
+      $ranges_results = islandora_ip_embargo_get_lists_information($list_identifier);
+      if ($ranges_results->rowCount()) {
+        form_set_error('list', t("You can't delete a list with ranges."));
+      }
+    }
+  }
+}
+/**
  * Configure IP Embargo lists submit handler.
  *
  * This will delete lists.

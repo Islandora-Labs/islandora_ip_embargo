@@ -151,6 +151,24 @@ function islandora_ip_embargo_get_embargo($islandora_object_id) {
 }
 
 /**
+ * Gets embargoes associated with a list.
+ *
+ * @param string $list_identifier
+ *   The id of the list to find embargoes for.
+ *
+ * @return SelectQuery
+ *   The query return.
+ */
+function islandora_ip_embargo_get_embargos($list_identifier) {
+  $embargoes = db_select('islandora_ip_embargo_embargoes')
+  ->fields('islandora_ip_embargo_embargoes')
+  ->condition('lid', $list_identifier)
+  ->execute();
+
+  return $embargoes;
+}
+
+/**
  * Update an object's embargo information.
  *
  * @param string $islandora_object_id
