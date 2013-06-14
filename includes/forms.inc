@@ -94,6 +94,7 @@ function islandora_ip_embargo_manage_lists_form_validate($form, &$form_state) {
     }
   }
 }
+
 /**
  * Configure IP Embargo lists submit handler.
  *

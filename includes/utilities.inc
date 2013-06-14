@@ -7,6 +7,8 @@
 /**
  * Get all lists for table.
  *
+ * This is not a general function it is used for pagination.
+ *
  * @return SelectQuery
  *   The query return.
  */
@@ -80,6 +82,8 @@ function islandora_ip_embargo_get_list_name($list_identifier) {
 
 /**
  * Get a list's information.
+ *
+ * This is not a general function it is used for pagination.
  *
  * @param int $list_identifier
  *   The identifier of the list.
