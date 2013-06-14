@@ -138,7 +138,7 @@ function islandora_ip_embargo_check_embargo(AbstractObject $islandora_object, $d
   }
 
   // Checking for embargo.
-  $in_range = TRUE;
+  $in_range = FALSE;
   $embargo_result = islandora_ip_embargo_get_embargo($islandora_object->id);
   if ($embargo_result->rowCount()) {
     $embargo_info = $embargo_result->fetchObject();
@@ -146,14 +146,14 @@ function islandora_ip_embargo_check_embargo(AbstractObject $islandora_object, $d
 
     while (($list_info = $list_results->fetchObject()) && $in_range) {
       $in_range = islandora_ip_embargo_ip_in_range($list_info->low_end, $list_info->high_end);
-      if (!$in_range) {
-        $in_range = FALSE;
+      if ($in_range) {
+        $in_range = TRUE;
       }
     }
   }
 
   // Handle an embargo.
-  if ($in_range === FALSE) {
+  if (!$in_range) {
     // Don't redirect on datastream checks.
     if (isset($datastream)) {
       // Some datastreams are allowed through embargo.
