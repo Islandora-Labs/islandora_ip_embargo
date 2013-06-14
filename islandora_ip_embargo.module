@@ -143,13 +143,20 @@ function islandora_ip_embargo_check_embargo(AbstractObject $islandora_object, $d
   if ($embargo_result->rowCount()) {
     $embargo_info = $embargo_result->fetchObject();
     $list_results = islandora_ip_embargo_get_lists_information($embargo_info->lid);
-
-    while (($list_info = $list_results->fetchObject()) && $in_range) {
-      $in_range = islandora_ip_embargo_ip_in_range($list_info->low_end, $list_info->high_end);
-      if ($in_range) {
-        $in_range = TRUE;
+    if ($list_results->rowCount()) {
+      while ($list_info = $list_results->fetchObject()) {
+        $in_range = islandora_ip_embargo_ip_in_range($list_info->low_end, $list_info->high_end);
+        if ($in_range) {
+          $in_range = TRUE;
+        }
       }
     }
+    else {
+      $in_range = TRUE;
+    }
+  }
+  else {
+    $in_range = TRUE;
   }
 
   // Handle an embargo.
