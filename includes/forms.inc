@@ -168,20 +168,42 @@ function islandora_ip_embargo_edit_list_form($form, &$form_state, $list_identifi
   module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
   $list_information = islandora_ip_embargo_get_lists_information($list_identifier);
   $list_name = islandora_ip_embargo_get_list_name($list_identifier);
+  $embargo_information = islandora_ip_embargo_get_embargos($list_identifier);
   $form_state['storage']['islandora_ip_embargo']['list_identifier'] = $list_identifier;
-
-  $header = array('low_end' => t('low end'), 'high_end' => t('high end'));
-  $options = array();
+  $range_header = array('low_end' => t('low end'), 'high_end' => t('high end'));
+  $range_options = array();
   while ($data = $list_information->fetchObject()) {
-    $options[$data->rid] = array(
+    $range_options[$data->rid] = array(
       'high_end' => $data->high_end,
       'low_end' => $data->low_end,
     );
   }
+  $embargo_header = array(
+    'embargoed_object' => t('embargoed object'),
+    'expiry_date' => t('expiry date'),
+    'object_pid' => t('pid'),
+  );
+  $embargo_options = array();
+  while ($data = $embargo_information->fetchObject()) {
+    $object = islandora_object_load($data->pid);
+    if (isset($data->expiry)) {
+      $year = date('Y', $data->expiry);
+      $month = date('M', $data->expiry);
+      $day = date('j', $data->expiry);
+      $expiry_date = $day . '-' . $month . '-' . $year;
+    }
+    else {
+      $expiry_date = t('None');
+    }
+    $embargo_options[$data->eid] = array(
+      'embargoed_object' => l($object->label, "islandora/object/{$data->pid}/ip_embargo"),
+      'expiry_date' => $expiry_date,
+      'object_pid' => $data->pid,
+    );
+  }
 
   $form['name'] = array(
-    '#title' => t('Name'),
-    '#description' => t('Name of the list.'),
+    '#title' => t('List Name'),
     '#type' => 'textfield',
     '#required' => TRUE,
     '#default_value' => $list_name,
@@ -191,23 +213,50 @@ function islandora_ip_embargo_edit_list_form($form, &$form_state, $list_identifi
     '#value' => t('Update name'),
     '#submit' => array('islandora_ip_embargo_edit_list_form_name_submit'),
   );
-  $form['ranges'] = array(
+  $form['list_tabs'] = array(
+    '#type' => 'vertical_tabs',
+  );
+  $form['list_tabs']['list_ranges'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Ranges'),
+  );
+  $form['list_tabs']['list_ranges']['ranges'] = array(
     '#type' => 'tableselect',
-    '#header' => $header,
-    '#options' => $options,
+    '#header' => $range_header,
+    '#options' => $range_options,
     '#attributes' => array(),
     '#empty' => t("There are no ranges."),
   );
-  $form['pager'] = array(
+  $form['list_tabs']['list_ranges']['pager'] = array(
     '#markup' => theme('pager'),
   );
-  $form['delete'] = array(
+  $form['list_tabs']['list_ranges']['delete_range'] = array(
     '#type' => 'submit',
     '#value' => t('Delete ranges'),
     '#submit' => array('islandora_ip_embargo_edit_list_form_range_submit'),
   );
-  $form['Add'] = array(
+  $form['list_tabs']['list_ranges']['Add'] = array(
     '#markup' => l(t('Add range'), "admin/islandora/ip_embargo/ranges/add/$list_identifier"),
+  );
+  $form['list_tabs']['list_embargoes'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Embargoes'),
+    '#access' => user_access('control islandora ip embargoes'),
+  );
+  $form['list_tabs']['list_embargoes']['embargoes'] = array(
+    '#type' => 'tableselect',
+    '#header' => $embargo_header,
+    '#options' => $embargo_options,
+    '#attributes' => array(),
+    '#empty' => t("There are no embargoes"),
+  );
+  $form['list_tabs']['list_embargoes']['embargo_pager'] = array(
+    '#markup' => theme('pager'),
+  );
+  $form['list_tabs']['list_embargoes']['delete_embargo'] = array(
+    '#type' => 'submit',
+    '#value' => t('Delete embargoes'),
+    '#submit' => array('islandora_ip_embargo_edit_list_form_embargo_submit'),
   );
   return $form;
 }
@@ -240,6 +289,23 @@ function islandora_ip_embargo_edit_list_form_range_submit($form, &$form_state) {
   foreach ($form_state['values']['ranges'] as $range_identifier => $is_checked) {
     if ($is_checked) {
       islandora_ip_embargo_remove_range($range_identifier);
+    }
+  }
+}
+
+/**
+ * Delete an embargo from a list.
+ *
+ * @param array $form
+ *   The Drupal form definition.
+ * @param array $form_state
+ *   The Drupal form state.
+ */
+function islandora_ip_embargo_edit_list_form_embargo_submit($form, &$form_state) {
+  module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
+  foreach ($form_state['values']['embargoes'] as $embargo_identifier => $is_checked) {
+    if ($is_checked) {
+      islandora_ip_embargo_remove_embargo($embargo_identifier);
     }
   }
 }
@@ -309,52 +375,101 @@ function islandora_ip_embargo_add_range_form_submit($form, &$form_state) {
  */
 function islandora_ip_embargo_object_embargo_form($form, &$form_state, $islandora_object) {
   module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
-  $form_state['storage']['islandroa_ip_embargo']['update'] = FALSE;
-  $form_state['storage']['islandroa_ip_embargo']['pid'] = $islandora_object->id;
+  $form_state['storage']['islandora_ip_embargo']['update'] = FALSE;
+  $form_state['storage']['islandora_ip_embargo']['pid'] = $islandora_object->id;
   $list_results = islandora_ip_embargo_get_lists();
-  $options = array('none' => NULL);
+  $options = array();
   while ($data = $list_results->fetchObject()) {
     $options[$data->lid] = $data->name;
   }
 
-  $form['lists'] = array(
-    '#type' => 'select',
-    '#title' => 'IP address range list',
-    '#description' => t('The list of IP ranges to limit access to this object to.'),
-    '#options' => $options,
-  );
-  $form['expiry_date'] = array(
-    '#type' => 'date',
-    '#title' => 'Expiry',
-    '#description' => t('When the Embargo will end.'),
-  );
-  $form['never_expire'] = array(
-    '#type' => 'checkbox',
-    '#title' => 'Never expire',
-    '#description' => t('This embargo should never expire, overrides the Expiry date field.'),
-  );
-
-  $embargo_result = islandora_ip_embargo_get_embargo($islandora_object->id);
-  if ($embargo_result->rowCount()) {
+  if (empty($options)) {
+    $form['empty'] = array(
+      '#markup' => '<p>There are currently no IP address range lists defined. At least one IP address range list must be defined in order to create IP embargoes.</p>',
+    );
+  }
+  else {
+    $embargo_result = islandora_ip_embargo_get_embargo($islandora_object->id);
     $embargo_info = $embargo_result->fetchObject();
-    $form_state['storage']['islandroa_ip_embargo']['update'] = TRUE;
-    $form['lists']['#default_value'] = $embargo_info->lid;
-    if (!isset($embargo_info->expiry)) {
-      $form['never_expire']['#default_value'] = 1;
+    if ($embargo_result->rowCount()) {
+      if (user_access('administer islandora ip embargoes')) {
+        $list = l($options[$embargo_info->lid], 'admin/islandora/ip_embargo/lists/' . $embargo_info->lid);
+      }
+      else {
+        $list = $options[$embargo_info->lid];
+      }
+      if (!isset($embargo_info->expiry)) {
+        $embargo_message = t('This object is currently embargoed indefinitely against IP ranges defined in the list: ') . $list . '.';
+        $form['current_embargo'] = array(
+          '#markup' => '<p>' . $embargo_message . '</p><hr/>',
+        );
+      }
+      else {
+        $year = date('Y', $embargo_info->expiry);
+        $month = date('F', $embargo_info->expiry);
+        $day = date('j', $embargo_info->expiry);
+        $ordinal = date('S', $embargo_info->expiry);
+        $embargo_message = t("This object is embargoed against IP ranges defined in the list: ") . $list . '. ' . t("The embargo is set to expire on the @day@ordinal of @month, @year.", array(
+          '@day' => $day,
+          '@month' => $month,
+          '@year' => $year,
+          '@ordinal' => $ordinal,
+        ));
+        $form['current_embargo_expiry'] = array(
+          '#markup' => '<p>' . $embargo_message . '</p><hr/>',
+        );
+      }
+    }
+    $form['lists'] = array(
+      '#type' => 'select',
+      '#title' => 'IP address range list',
+      '#description' => t('The list of IP ranges to limit access to this object to.'),
+      '#options' => $options,
+    );
+    $form['expiry_date'] = array(
+      '#type' => 'date',
+      '#title' => 'Expiry',
+      '#description' => t('When the Embargo will end.'),
+    );
+    $form['never_expire'] = array(
+      '#type' => 'checkbox',
+      '#title' => 'Never expire',
+      '#description' => t('This embargo should never expire, overrides the Expiry date field.'),
+    );
+
+    if ($embargo_result->rowCount()) {
+      $submit_button_value = t('Update Embargo');
+      $form_state['storage']['islandora_ip_embargo']['update'] = TRUE;
+      $form['lists']['#default_value'] = $embargo_info->lid;
+      if (!isset($embargo_info->expiry)) {
+        $form['never_expire']['#default_value'] = 1;
+      }
+      else {
+        $year = date('Y', $embargo_info->expiry);
+        $month = date('n', $embargo_info->expiry);
+        $day = date('j', $embargo_info->expiry);
+        $form['expiry_date']['#default_value'] = array(
+          'year' => $year,
+          'month' => $month,
+          'day' => $day,
+        );
+      }
     }
     else {
-      $year = date('Y', $embargo_info->expiry);
-      $month = date('n', $embargo_info->expiry);
-      $day = date('j', $embargo_info->expiry);
-      $form['expiry_date']['#default_value'] = array(
-        'year' => $year,
-        'month' => $month,
-        'day' => $day,
+      $submit_button_value = t('Set Embargo');
+    }
+
+    $form['submit'] = array('#type' => 'submit', '#value' => $submit_button_value);
+
+    if ($embargo_result->rowCount()) {
+      $form['delete'] = array(
+        '#type' => 'submit',
+        '#value' => 'Clear Embargo',
+        '#submit' => array('islandora_ip_embargo_object_embargo_form_delete'),
+        '#limit_validation_errors' => array(),
       );
     }
   }
-
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Set Embargo'));
 
   return $form;
 }
@@ -380,24 +495,35 @@ function islandora_ip_embargo_object_embargo_form_submit($form, &$form_state) {
       $form_state['values']['expiry_date']['year']
     );
   }
-  if ($form_state['storage']['islandroa_ip_embargo']['update']) {
+  if ($form_state['storage']['islandora_ip_embargo']['update']) {
     if ($form_state['values']['lists'] != 'none') {
       islandora_ip_embargo_update_embargo(
-        $form_state['storage']['islandroa_ip_embargo']['pid'],
+        $form_state['storage']['islandora_ip_embargo']['pid'],
         $form_state['values']['lists'],
         $expiry
       );
     }
-    else {
-      islandora_ip_embargo_remove_embargo($form_state['storage']['islandroa_ip_embargo']['pid']);
-    }
   }
   else {
     islandora_ip_embargo_set_embargo(
-      $form_state['storage']['islandroa_ip_embargo']['pid'],
+      $form_state['storage']['islandora_ip_embargo']['pid'],
       $form_state['values']['lists'],
       $expiry
     );
   }
+  return $form;
+}
+
+/**
+ * Submit handler for object embargo deletion.
+ *
+ * @param array $form
+ *   The Drupal form definition.
+ * @param array $form_state
+ *   The Drupal form state.
+ */
+function islandora_ip_embargo_object_embargo_form_delete($form, &$form_state) {
+  module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
+  islandora_ip_embargo_remove_embargo($form_state['storage']['islandora_ip_embargo']['pid'], $is_pid = TRUE);
   return $form;
 }

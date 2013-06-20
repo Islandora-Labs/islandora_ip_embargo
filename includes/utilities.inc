@@ -216,13 +216,24 @@ function islandora_ip_embargo_set_embargo($islandora_object_id, $list_id, $expir
 /**
  * Remove an object's embargo information.
  *
- * @param string $islandora_object_id
- *   The PID of the object to remove the embargo from.
+ * @param string $embargo_identifier
+ *   The UID of the object to remove the embargo from.
+ * @param bool $is_pid
+ *   Boolean defining whether the $embargo_identifier is an object PID.
+ *
+ *   If set to FALSE, $embargo_identifier will be treated as an EID.
  */
-function islandora_ip_embargo_remove_embargo($islandora_object_id) {
-  db_delete('islandora_ip_embargo_embargoes')
-  ->condition('pid', $islandora_object_id)
-  ->execute();
+function islandora_ip_embargo_remove_embargo($embargo_identifier, $is_pid = FALSE) {
+  if (!$is_pid) {
+    db_delete('islandora_ip_embargo_embargoes')
+    ->condition('eid', $embargo_identifier)
+    ->execute();
+  }
+  else {
+    db_delete('islandora_ip_embargo_embargoes')
+    ->condition('pid', $embargo_identifier)
+    ->execute();
+  }
 }
 
 /**
