@@ -67,12 +67,6 @@ function islandora_ip_embargo_schema() {
   $schema['islandora_ip_embargo_embargoes'] = array(
     'description' => 'Table that stores information on embargoed objects.',
     'fields' => array(
-      'eid' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'The UID of the embargo',
-      ),
       'pid' => array(
         'type' => 'varchar',
         'length' => 255,
@@ -97,7 +91,7 @@ function islandora_ip_embargo_schema() {
         'columns' => array('lid' => 'lid'),
       ),
     ),
-    'primary key' => array('eid'),
+    'primary key' => array('pid'),
   );
 
   return $schema;
