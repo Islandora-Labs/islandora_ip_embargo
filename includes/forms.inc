@@ -392,8 +392,14 @@ function islandora_ip_embargo_object_embargo_form($form, &$form_state, $islandor
     $embargo_result = islandora_ip_embargo_get_embargo($islandora_object->id);
     $embargo_info = $embargo_result->fetchObject();
     if ($embargo_result->rowCount()) {
+      if (user_access('administer islandora ip embargoes')) {
+        $list = l($options[$embargo_info->lid], 'admin/islandora/ip_embargo/lists/' . $embargo_info->lid);
+      }
+      else {
+        $list = $options[$embargo_info->lid];
+      }
       if (!isset($embargo_info->expiry)) {
-        $embargo_message = t('This object is currently embargoed indefinitely.');
+        $embargo_message = t('This object is currently embargoed indefinitely against IP ranges defined in the list: ') . $list . '.';
         $form['current_embargo'] = array(
           '#markup' => '<p>' . $embargo_message . '</p><hr/>',
         );
@@ -403,7 +409,7 @@ function islandora_ip_embargo_object_embargo_form($form, &$form_state, $islandor
         $month = date('F', $embargo_info->expiry);
         $day = date('j', $embargo_info->expiry);
         $ordinal = date('S', $embargo_info->expiry);
-        $embargo_message = t("This object's embargo is set to expire on the @day@ordinal of @month, @year.", array(
+        $embargo_message = t("This object is embargoed against IP ranges defined in the list: ") . $list . '. ' . t("The embargo is set to expire on the @day@ordinal of @month, @year.", array(
           '@day' => $day,
           '@month' => $month,
           '@year' => $year,
