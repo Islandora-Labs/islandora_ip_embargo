@@ -203,8 +203,7 @@ function islandora_ip_embargo_edit_list_form($form, &$form_state, $list_identifi
   }
 
   $form['name'] = array(
-    '#title' => t('Name'),
-    '#description' => t('Name of the list.'),
+    '#title' => t('List Name'),
     '#type' => 'textfield',
     '#required' => TRUE,
     '#default_value' => $list_name,
@@ -256,7 +255,7 @@ function islandora_ip_embargo_edit_list_form($form, &$form_state, $list_identifi
   );
   $form['list_tabs']['list_embargoes']['delete_embargo'] = array(
     '#type' => 'submit',
-    '#value' => t('Delete embargos'),
+    '#value' => t('Delete embargoes'),
     '#submit' => array('islandora_ip_embargo_edit_list_form_embargo_submit'),
   );
   return $form;
@@ -433,6 +432,7 @@ function islandora_ip_embargo_object_embargo_form($form, &$form_state, $islandor
     );
 
     if ($embargo_result->rowCount()) {
+      $submit_button_value = t('Update Embargo');
       $form_state['storage']['islandora_ip_embargo']['update'] = TRUE;
       $form['lists']['#default_value'] = $embargo_info->lid;
       if (!isset($embargo_info->expiry)) {
@@ -449,8 +449,11 @@ function islandora_ip_embargo_object_embargo_form($form, &$form_state, $islandor
         );
       }
     }
+    else {
+      $submit_button_value = t('Set Embargo');
+    }
 
-    $form['submit'] = array('#type' => 'submit', '#value' => t('Set Embargo'));
+    $form['submit'] = array('#type' => 'submit', '#value' => $submit_button_value);
 
     if ($embargo_result->rowCount()) {
       $form['delete'] = array(
