@@ -4,5 +4,4 @@ package = Islandora
 dependencies[] = islandora
 version = 7.x-dev
 core = 7.x
-files[] = tests/islandora_ip_embargo_usage_test.test
 

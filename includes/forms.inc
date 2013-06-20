@@ -196,7 +196,7 @@ function islandora_ip_embargo_edit_list_form($form, &$form_state, $list_identifi
       $expiry_date = t('None');
     }
     $embargo_options[$data->eid] = array(
-      'embargoed_object' => l($object->label, "islandora/object/{$data->pid}"),
+      'embargoed_object' => l($object->label, "islandora/object/{$data->pid}/ip_embargo"),
       'expiry_date' => $expiry_date,
       'object_pid' => $data->pid,
     );
