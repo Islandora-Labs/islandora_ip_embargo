@@ -217,11 +217,7 @@ function islandora_ip_embargo_set_embargo($islandora_object_id, $list_id, $expir
  * Remove an object's embargo information.
  *
  * @param string $embargo_identifier
- *   The UID of the object to remove the embargo from.
- * @param bool $is_pid
- *   Boolean defining whether the $embargo_identifier is an object PID.
- *
- *   If set to FALSE, $embargo_identifier will be treated as an EID.
+ *   The PID of the object to remove the embargo from.
  */
 function islandora_ip_embargo_remove_embargo($embargo_identifier) {
   db_delete('islandora_ip_embargo_embargoes')
