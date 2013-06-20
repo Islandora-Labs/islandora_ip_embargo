@@ -385,7 +385,7 @@ function islandora_ip_embargo_object_embargo_form($form, &$form_state, $islandor
 
   if (empty($options)) {
     $form['empty'] = array(
-      '#markup' => '<p>There are currently no IP address range lists defined. At least one IP address range list must be defined in order to create an IP embargo on this object.</p>',
+      '#markup' => '<p>There are currently no IP address range lists defined. At least one IP address range list must be defined in order to create IP embargoes.</p>',
     );
   }
   else {
