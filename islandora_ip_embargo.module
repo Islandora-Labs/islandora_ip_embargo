@@ -100,12 +100,11 @@ function islandora_ip_embargo_menu() {
  *
  * Checks for an IP address embargo and handles redirects if necessary.
  */
-//function islandora_ip_embargo_menu_alter(&$items) {
 function islandora_ip_embargo_islandora_object_access($op, $islandora_object, $user) {
   module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
 
   // If we're looking for a thumbnail let it through.
-  if (strpos(current_path(),'/datastream/TN') !== FALSE) {
+  if (strpos(current_path(), '/datastream/TN') !== FALSE) {
     return TRUE;
   }
 
