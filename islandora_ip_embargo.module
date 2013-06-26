@@ -96,45 +96,16 @@ function islandora_ip_embargo_menu() {
 }
 
 /**
- * Implements hook_menu_alter().
+ * Implements hook_islandora_object_access().
  *
- * Changes the permission callback for objects in Islandora.
- */
-function islandora_ip_embargo_menu_alter(&$items) {
-  $items['islandora/object/%islandora_object']['access callback'] = 'islandora_ip_embargo_check_embargo';
-  $items['islandora/object/%islandora_object']['access arguments'] = array(2);
-}
-
-/**
- * Implements hook_islandora_datastream_access().
- *
- * @see islandora_ip_embargo_check_embargo()
- */
-function islandora_ip_range_islandora_datastream_access($op, $object, $user) {
-  islandora_ip_embargo_check_embargo($object->parent, $object);
-}
-
-/**
  * Checks for an IP address embargo and handles redirects if necessary.
- *
- * @param AbstractObject $islandora_object
- *   The object to handle a possible embargo for.
- * @param mixed $datastream
- *   Defaults to NULL for a general check on an object.
- *   A datastream object for a check on a specific datastream on an object.
  */
-function islandora_ip_embargo_check_embargo(AbstractObject $islandora_object, $datastream = NULL) {
+function islandora_ip_embargo_islandora_object_access($op, $islandora_object, $user) {
   module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
 
-  // Start with normal permissions check.
-  if (isset($datastream_id)) {
-    $islandora_access_return = islandora_object_access_callback(FEDORA_VIEW_OBJECTS, $islandora_object, $datastream);
-  }
-  else {
-    $islandora_access_return = islandora_object_access_callback(FEDORA_VIEW_OBJECTS, $islandora_object);
-  }
-  if (!$islandora_access_return) {
-    return ($islandora_access_return);
+  // If we're looking for a thumbnail let it through.
+  if (strpos(current_path(), '/datastream/TN') !== FALSE) {
+    return TRUE;
   }
 
   // Checking for embargo.
@@ -161,17 +132,6 @@ function islandora_ip_embargo_check_embargo(AbstractObject $islandora_object, $d
 
   // Handle an embargo.
   if (!$in_range) {
-    // Don't redirect on datastream checks.
-    if (isset($datastream)) {
-      // Some datastreams are allowed through embargo.
-      $allowed_datastreams = array('TN', 'RELS-EXT');
-      if (!in_array($datastream->id, $allowed_datastreams)) {
-        return FALSE;
-      }
-      else {
-        return TRUE;
-      }
-    }
     // If there is a redirect configured then use it. If not let Drupal do it.
     $redirect_url = variable_get('islandora_ip_embargo_embargoed_redirect', '');
     if ($redirect_url) {
