@@ -116,8 +116,7 @@ function islandora_ip_embargo_islandora_object_access($op, $islandora_object, $u
     $list_results = islandora_ip_embargo_get_lists_information($embargo_info->lid);
     if ($list_results->rowCount()) {
       while ($list_info = $list_results->fetchObject()) {
-        $in_range = islandora_ip_embargo_ip_in_range($list_info->low_end, $list_info->high_end);
-        if ($in_range) {
+        if (islandora_ip_embargo_ip_in_range($list_info->low_end, $list_info->high_end)) {
           $in_range = TRUE;
         }
       }
