@@ -119,7 +119,6 @@ function islandora_ip_embargo_manage_lists_form($form, &$form_state) {
   }
   $header = array('name' => t('Name'));
   $form['Lists'] = array(
-    '#title' => 'Currently Embargoed Objects',
     '#type' => 'tableselect',
     '#header' => $header,
     '#options' => $options,
@@ -307,7 +306,6 @@ function islandora_ip_embargo_edit_list_form_name_submit($form, &$form_state) {
  */
 function islandora_ip_embargo_edit_list_form_range_submit($form, &$form_state) {
   module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
-  dsm($form);
   foreach ($form_state['values']['ranges'] as $range_identifier => $is_checked) {
     if ($is_checked) {
       islandora_ip_embargo_remove_range($range_identifier);
