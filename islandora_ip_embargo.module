@@ -7,6 +7,7 @@
 // Permissions.
 define('ISLANDORA_IP_EMBARGO_ADMINISTER_PERMISSION', 'administer islandora ip embargoes');
 define('ISLANDORA_IP_EMBARGO_CONTROL_EMBARGOES', 'control islandora ip embargoes');
+define('ISLANDORA_IP_EMBARGO_MANAGE_EMBARGOES', 'manage islandora ip embargoes');
 
 /**
  * Implements hook_permission().
@@ -20,6 +21,10 @@ function islandora_ip_embargo_permission() {
     ISLANDORA_IP_EMBARGO_CONTROL_EMBARGOES => array(
       'title' => t('Control embargoes'),
       'description' => t("Create, edit, delete embargoes."),
+    ),
+    ISLANDORA_IP_EMBARGO_MANAGE_EMBARGOES => array(
+      'title' => t('Manage embargoes'),
+      'description' => t('Manage embargoed objects'),
     ),
   );
 }
@@ -91,6 +96,15 @@ function islandora_ip_embargo_menu() {
       'page callback' => 'drupal_get_form',
       'type' => MENU_LOCAL_TASK,
       'access arguments' => array(ISLANDORA_IP_EMBARGO_CONTROL_EMBARGOES),
+    ),
+    'admin/islandora/ip_embargo/manage' => array(
+      'title' => 'Manage Embargo Objects',
+      'description' => "View a list of all embargoed objects",
+      'file' => 'includes/forms.inc',
+      'page arguments' => array('islandora_ip_embargo_manage_embargo_list_form'),
+      'page callback' => 'drupal_get_form',
+      'type' => MENU_LOCAL_TASK,
+      'access arguments' => array(ISLANDORA_IP_EMBARGO_MANAGE_EMBARGOES),
     ),
   );
 }
