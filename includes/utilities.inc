@@ -259,3 +259,23 @@ function islandora_ip_embargo_cron_cleanup($time_stamp) {
     "The ip embargo cron job has ended, $num_deleted embargos have been removed."
   );
 }
+
+/**
+ * Retrieve all objects effected by embargos, using pageination.
+ *
+ * @param int $limit
+ *   The limit to set on the query.
+ *
+ * @return Array
+ *   The list of embargoed objects.
+ */
+function islandora_ip_embargo_get_all_embargo_objects($limit = 10) {
+  $query = db_select('islandora_ip_embargo_embargoes');
+  $query = $query->extend('TableSort');
+  $query = $query->extend('PagerDefault');
+  $query = $query->fields('islandora_ip_embargo_embargoes');
+  $query = $query->limit($limit);
+  $embargoes = $query->execute();
+
+  return $embargoes;
+}
