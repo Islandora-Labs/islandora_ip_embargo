@@ -14,4 +14,5 @@ CONFIGURATION
 -------------
 
 Drupal cron should be configured to run once a day to clean out expired
-embargoes.
+embargoes.  While not a dependency more functionality can be found by
+installing the Rules https://drupal.org/project/rules module.
