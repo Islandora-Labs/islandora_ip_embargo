@@ -39,6 +39,75 @@ function islandora_ip_embargo_settings_form($form, &$form_state) {
 }
 
 /**
+ * Populate data for the embargo object list form.
+ *
+ * @param array $form
+ *   The Drupal form definition.
+ * @param array $form_state
+ *   The Drupal form state.
+ *
+ * @return array
+ *   The Drupal form definition.
+ */
+function islandora_ip_embargo_manage_embargo_list_form($form, &$form_state) {
+  module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
+
+  $options = array();
+  $embargoes = islandora_ip_embargo_get_all_embargo_objects();
+
+  // Loop thru all the pids, populate the objects and get
+  // relationships.
+  while ($data = $embargoes->fetchObject()) {
+    $fedora_object = islandora_object_load($data->pid);
+    $rels = $fedora_object->relationships->get();
+
+    $options[$data->pid]['modify'] = l($fedora_object->label, 'islandora/object/' . $data->pid . '/ip_embargo');
+    $options[$data->pid]['pid'] = l($data->pid, 'islandora/object/' . $data->pid . '/manage');
+    $options[$data->pid]['collection'] = l($rels[1]['object']['value'], 'islandora/object/' . $rels[0]['object']['value']);
+  }
+
+  $header = array(
+    'modify' => t('Modify'),
+    'pid' => t('Manage'),
+    'collection' => t('Is Member Of'),
+  );
+
+  $form['Lists'] = array(
+    '#type' => 'tableselect',
+    '#header' => $header,
+    '#options' => $options,
+    '#attributes' => array(),
+    '#empty' => t("There are no embargoed objects."),
+  );
+  $form['pager'] = array(
+    '#markup' => theme('pager'),
+  );
+  $form['delete'] = array(
+    '#type' => 'submit',
+    '#value' => t('Delete'),
+    '#submit' => array('islandora_ip_embargo_delete_object_embargo_form_name_submit'),
+  );
+
+  return $form;
+}
+
+/**
+ * Delete embargo's on affected object(s).
+ *
+ * @param array $form
+ *   The Drupal form definition.
+ * @param array $form_state
+ *   The Drupal form state.
+ */
+function islandora_ip_embargo_delete_object_embargo_form_name_submit($form, &$form_state) {
+  foreach ($form_state['values']['Lists'] as $list_identifier => $is_checked) {
+    if ($is_checked) {
+      islandora_ip_embargo_remove_embargo($list_identifier);
+    }
+  }
+}
+
+/**
  * Configure IP Embargo lists.
  *
  * @param array $form
