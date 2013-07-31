@@ -254,10 +254,7 @@ function islandora_ip_embargo_cron_cleanup($time_stamp) {
   ->condition('expiry', $time_stamp, '<=')
   ->execute();
 
-  watchdog(
-    'Cron Job End',
-    "The ip embargo cron job has ended, $num_deleted embargos have been removed."
-  );
+  watchdog('Embargoes deleted', "$num_deleted embargos have been removed.");
 }
 
 /**
@@ -274,16 +271,18 @@ function islandora_ip_embargo_send_embargo_lift_events($days_before) {
   if (module_exists('rules')) {
     batch_set(array(
       'operations' => array(
-        'rules_invoke_event',
-        array('islandora_ip_embargo_embargo_lift_event_batch', $event_threshold),
+        array(
+          'islandora_ip_embargo_embargo_lift_event_batch',
+          array($event_threshold)),
       ),
       'finished' => 'islandora_ip_embargo_lift_event_batch_finished',
       'title' => t('Sending out embargo lift events.'),
       'init_message' => t('Event batch starting.'),
       'progress_message' => t('Processed @current out of @total.'),
       'error_message' => t('Event batch has encountered an error.'),
-      'file' => drupal_get_path('module', 'islandora_ip_embargo') . '/utilities/batch.inc',
+      'file' => drupal_get_path('module', 'islandora_ip_embargo') . '/includes/batch.inc',
     ));
+    batch_process();
   }
 }
 
@@ -304,7 +303,8 @@ function islandora_ip_embargo_count_embargoes_before_timestamp($event_threshold)
   ->condition('expiry', $event_threshold, '<=')
   ->condition('expiry_event_triggered', 0, '=')
   ->countQuery()
-  ->execute();
+  ->execute()
+  ->fetchField();
 }
 
 /**

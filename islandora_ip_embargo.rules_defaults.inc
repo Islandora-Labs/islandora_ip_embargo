@@ -18,9 +18,9 @@ function islandora_ip_embargo_default_rules_configuration() {
     ->event('islandora_ip_embargo_embargo_to_be_lifted')
     ->action('mail', array(
       'to' => '[site:mail]',
-      'subject' => '[[site:name]] "[embargoed_object:label]" will have its embargo lifted.',
+      'subject' => '[site:name] "[embargoed_object:label]" will have its embargo lifted.',
       'message' => '[embargoed_object:label] with PID [embargoed_object:id] at ' .
-        '[[site:url]]/islandora/object/[embargoed_object:id] is having its embargo lifted.',
+        '[site:url]/islandora/object/[embargoed_object:id] is having its embargo lifted.',
     )
   );
 
