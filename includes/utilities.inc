@@ -282,6 +282,12 @@ function islandora_ip_embargo_send_embargo_lift_events($days_before) {
       'error_message' => t('Event batch has encountered an error.'),
       'file' => drupal_get_path('module', 'islandora_ip_embargo') . '/includes/batch.inc',
     ));
+
+    // This is a hack around the broken batch API.
+    // https://drupal.org/node/638712#comment-2289138
+    $batch =& batch_get();
+    $batch['progressive'] = FALSE;
+
     batch_process();
   }
 }
