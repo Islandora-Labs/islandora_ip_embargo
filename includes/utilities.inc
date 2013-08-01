@@ -260,7 +260,7 @@ function islandora_ip_embargo_cron_cleanup($time_stamp) {
     'Cron Job End',
     "The ip embargo cron job has ended, $num_deleted embargos have been removed."
   );
-  //@codingStandardsIgnoreStart
+  //@codingStandardsIgnoreEnd
 }
 
 /**
