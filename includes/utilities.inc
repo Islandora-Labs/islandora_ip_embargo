@@ -256,8 +256,10 @@ function islandora_ip_embargo_cron_cleanup($time_stamp) {
 
   watchdog(
     'Cron Job End',
-    "The ip embargo cron job has ended, $num_deleted embargos have been removed."
+    "The ip embargo cron job has ended, @num_deleted embargos have been removed.",
+    array("@num_deleted" => $num_deleted)
   );
+
 }
 
 /**
@@ -266,7 +268,7 @@ function islandora_ip_embargo_cron_cleanup($time_stamp) {
  * @param int $limit
  *   The limit to set on the query.
  *
- * @return Array
+ * @return array
  *   The list of embargoed objects.
  */
 function islandora_ip_embargo_get_all_embargo_objects($limit = 10) {
