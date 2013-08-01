@@ -121,7 +121,7 @@ function islandora_ip_embargo_islandora_datastream_access($op, $islandora_datast
   if ($islandora_datastream->id == 'TN' && $restrict_access) {
     return TRUE;
   }
-  else if ($restrict_access) {
+  elseif ($restrict_access) {
     return FALSE;
   }
 

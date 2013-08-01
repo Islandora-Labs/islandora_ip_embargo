@@ -312,4 +312,3 @@ function islandora_ip_embargo_restrict_access($pid) {
   }
   return !$open_access;
 }
-
