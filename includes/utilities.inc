@@ -266,7 +266,7 @@ function islandora_ip_embargo_cron_cleanup($time_stamp) {
  * @param int $limit
  *   The limit to set on the query.
  *
- * @return Array
+ * @return array
  *   The list of embargoed objects.
  */
 function islandora_ip_embargo_get_all_embargo_objects($limit = 10) {

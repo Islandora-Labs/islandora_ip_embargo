@@ -1,3 +1,14 @@
+BUILD STATUS
+------------
+Current build status:
+[![Build Status](https://travis-ci.org/Islandora/islandora_ip_embargo.png?branch=7.x)](https://travis-ci.org/Islandora/islandora_ip_embargo)
+
+CI Server:
+http://jenkins.discoverygarden.ca
+
+ISLANDORA IP EMBARGO
+==================
+
 CONTENTS OF THIS FILE
 ---------------------
 
