@@ -254,10 +254,13 @@ function islandora_ip_embargo_cron_cleanup($time_stamp) {
   ->condition('expiry', $time_stamp, '<=')
   ->execute();
 
+  //@codingStandardsIgnoreStart
+  // This only gets picked up by travis for some reason.
   watchdog(
     'Cron Job End',
     "The ip embargo cron job has ended, $num_deleted embargos have been removed."
   );
+  //@codingStandardsIgnoreStart
 }
 
 /**
