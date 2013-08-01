@@ -17,7 +17,7 @@ before_install:
   - ln -s $TRAVIS_BUILD_DIR sites/all/modules/islandora_ip_embargo
   - drush en --yes islandora_ip_embargo
 script:
-  - ant -buildfile sites/all/modules/islandora_ip_embargo/build.xml lint
+  #- ant -buildfile sites/all/modules/islandora_ip_embargo/build.xml lint  TOTO: we need to set this up for jenkins
   - $ISLANDORA_DIR/tests/scripts/line_endings.sh sites/all/modules/islandora_ip_embargo
   - drush coder-review --reviews=production,security,style,i18n,potx,sniffer islandora_ip_embargo
   - phpcpd --names *.module,*.inc,*.test sites/all/modules/islandora_ip_embargo
