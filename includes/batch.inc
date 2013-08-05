@@ -14,6 +14,8 @@
  */
 function islandora_ip_embargo_embargo_lift_event_batch($event_threshold, &$context) {
   module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
+  drupal_set_time_limit(240);
+
   // Set initial count.
   if (!isset($context['sandbox']['total_count'])) {
     $context['sandbox']['total_count'] = islandora_ip_embargo_count_embargoes_before_timestamp($event_threshold);
@@ -26,7 +28,7 @@ function islandora_ip_embargo_embargo_lift_event_batch($event_threshold, &$conte
   }
 
   // Do the individual batch task.
-  $results = islandora_ip_embargo_get_embargoes_before_timestamp($event_threshold, $context['sandbox']['current'], 2);
+  $results = islandora_ip_embargo_get_embargoes_before_timestamp($event_threshold, $context['sandbox']['current'], 10);
   $count = $results->rowCount();
   while ($data = $results->fetchObject()) {
     rules_invoke_event('islandora_ip_embargo_embargo_to_be_lifted', islandora_object_load($data->pid));
