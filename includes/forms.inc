@@ -25,6 +25,15 @@ function islandora_ip_embargo_settings_form($form, &$form_state) {
       ''
     ),
   );
+  $form['islandora_ip_embargo_days_before_embargo_trigger'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Days before embargo alert'),
+    '#description' => t('How many days before an embargo is lifted to trigger rules.'),
+    '#default_value' => variable_get(
+      'islandora_ip_embargo_days_before_embargo_trigger',
+      0
+    ),
+  );
 
   return system_settings_form($form);
 }
