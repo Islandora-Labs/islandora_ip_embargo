@@ -256,7 +256,8 @@ function islandora_ip_embargo_cron_cleanup($time_stamp) {
 
   watchdog(
     'Cron Job End',
-    "The ip embargo cron job has ended, $num_deleted embargos have been removed."
+    "The ip embargo cron job has ended, @num_deleted embargos have been removed.",
+    array('@num_deleted' => $num_deleted)
   );
 }
 
@@ -286,7 +287,7 @@ function islandora_ip_embargo_get_all_embargo_objects($limit = 10) {
  * @param string $pid
  *   The PID of the object to check.
  *
- * @return boolean
+ * @return bool
  *   True if one should restrict access. False if one should not.
  */
 function islandora_ip_embargo_restrict_access($pid) {
