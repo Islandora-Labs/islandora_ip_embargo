@@ -254,7 +254,11 @@ function islandora_ip_embargo_cron_cleanup($time_stamp) {
   ->condition('expiry', $time_stamp, '<=')
   ->execute();
 
-  watchdog('Embargoes deleted', "$num_deleted embargos have been removed.");
+  watchdog(
+    'Cron Job End',
+    "The ip embargo cron job has ended, @num_deleted embargos have been removed.",
+    array('@num_deleted' => $num_deleted)
+  );
 }
 
 /**
@@ -373,4 +377,37 @@ function islandora_ip_embargo_get_all_embargo_objects($limit = 10) {
   $embargoes = $query->execute();
 
   return $embargoes;
+}
+
+/**
+ * Checks if we should restrict access to the object based on ip embargoes.
+ *
+ * @param string $pid
+ *   The PID of the object to check.
+ *
+ * @return bool
+ *   True if one should restrict access. False if one should not.
+ */
+function islandora_ip_embargo_restrict_access($pid) {
+  $open_access = FALSE;
+
+  $embargo_result = islandora_ip_embargo_get_embargo($pid);
+  if ($embargo_result->rowCount()) {
+    $embargo_info = $embargo_result->fetchObject();
+    $list_results = islandora_ip_embargo_get_lists_information($embargo_info->lid);
+    if ($list_results->rowCount()) {
+      while ($list_info = $list_results->fetchObject()) {
+        if (islandora_ip_embargo_ip_in_range($list_info->low_end, $list_info->high_end)) {
+          $open_access = TRUE;
+        }
+      }
+    }
+    else {
+      $open_access = TRUE;
+    }
+  }
+  else {
+    $open_access = TRUE;
+  }
+  return !$open_access;
 }
