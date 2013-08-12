@@ -1,3 +1,14 @@
+BUILD STATUS
+------------
+Current build status:
+[![Build Status](https://travis-ci.org/Islandora/islandora_ip_embargo.png?branch=7.x)](https://travis-ci.org/Islandora/islandora_ip_embargo)
+
+CI Server:
+http://jenkins.discoverygarden.ca
+
+ISLANDORA IP EMBARGO
+==================
+
 CONTENTS OF THIS FILE
 ---------------------
 
@@ -14,4 +25,5 @@ CONFIGURATION
 -------------
 
 Drupal cron should be configured to run once a day to clean out expired
-embargoes.
+embargoes.  While not a dependency more functionality can be found by
+installing the Rules https://drupal.org/project/rules module.

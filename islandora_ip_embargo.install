@@ -84,6 +84,13 @@ function islandora_ip_embargo_schema() {
         'not null' => TRUE,
         'description' => 'The LID the object is constrained to.',
       ),
+      'expiry_event_triggered' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => '0 if the event has not been triggered 1 if it has been.',
+      ),
     ),
     'foreign keys' => array(
       'list' => array(
@@ -103,8 +110,23 @@ function islandora_ip_embargo_schema() {
 function islandora_ip_embargo_uninstall() {
   $drupal_variables = array(
     'islandora_ip_embargo_embargoed_redirect',
+    'islandora_ip_embargo_days_before_embargo_trigger',
   );
   foreach ($drupal_variables as $drupal_variable) {
     variable_del($drupal_variable);
   }
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function islandora_ip_embargo_update_7100() {
+  $new_field = array(
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => '0 if the event has not been triggered 1 if it has been.',
+  );
+  db_add_field('islandora_ip_embargo_embargoes', 'expiry_event_triggered', $new_field);
 }

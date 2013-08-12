@@ -165,6 +165,11 @@ function islandora_ip_embargo_cron() {
 
   watchdog('Cron Job Begin', 'The ip embargo cron job has begun.');
 
+  islandora_ip_embargo_send_embargo_lift_events(variable_get(
+    'islandora_ip_embargo_days_before_embargo_trigger',
+    0
+  ));
+
   // Execute cleanup on embargo expiry timestamps that have expired.
   islandora_ip_embargo_cron_cleanup(time());
 }

@@ -262,12 +262,110 @@ function islandora_ip_embargo_cron_cleanup($time_stamp) {
 }
 
 /**
+ * This will send islandora_ip_embargo_to_be_lifted events via rules module.
+ *
+ * @param int $days_before
+ *   How many days before an embargo is lifted to send the event.
+ */
+function islandora_ip_embargo_send_embargo_lift_events($days_before) {
+  module_load_include('inc', 'islandora_ip_embargo', 'includes/batch');
+  $event_threshold = time() + $days_before * 24 * 60 * 60;
+
+  // If rules is enabled trigger a batch of events for embargoes being lifted.
+  if (module_exists('rules')) {
+    batch_set(array(
+      'operations' => array(
+        array(
+          'islandora_ip_embargo_embargo_lift_event_batch',
+          array($event_threshold)),
+      ),
+      'finished' => 'islandora_ip_embargo_lift_event_batch_finished',
+      'title' => t('Sending out embargo lift events.'),
+      'init_message' => t('Event batch starting.'),
+      'progress_message' => t('Processed @current out of @total.'),
+      'error_message' => t('Event batch has encountered an error.'),
+      'file' => drupal_get_path('module', 'islandora_ip_embargo') . '/includes/batch.inc',
+    ));
+
+    // This is a hack around the broken batch API.
+    // https://drupal.org/node/638712#comment-2289138
+    $batch =& batch_get();
+    $batch['progressive'] = FALSE;
+
+    batch_process();
+  }
+}
+
+/**
+ * This will get the number of embargoes that expire after a given time.
+ *
+ * Only counts those that have not had their event triggered.
+ *
+ * @param int $event_threshold
+ *   Timestamp of upper bound.
+ *
+ * @return int
+ *   The number of embargoes.
+ */
+function islandora_ip_embargo_count_embargoes_before_timestamp($event_threshold) {
+  return db_select('islandora_ip_embargo_embargoes')
+  ->fields('islandora_ip_embargo_embargoes')
+  ->condition('expiry', $event_threshold, '<=')
+  ->condition('expiry_event_triggered', 0, '=')
+  ->countQuery()
+  ->execute()
+  ->fetchField();
+}
+
+/**
+ * This function will get the list of embargoes that expire after a given time.
+ *
+ * Only returns those that have not had their event triggered.
+ *
+ * @param int $event_threshold
+ *   Timestamp of upper bound.
+ * @param int $offset
+ *   The offset for the query.
+ * @param int $limit
+ *   The limit for the query.
+ *
+ * @return object
+ *   The results object from the query.
+ */
+function islandora_ip_embargo_get_embargoes_before_timestamp($event_threshold, $offset, $limit) {
+  return db_select('islandora_ip_embargo_embargoes')
+  ->fields('islandora_ip_embargo_embargoes')
+  ->condition('expiry', $event_threshold, '<=')
+  ->condition('expiry_event_triggered', 0, '=')
+  ->orderBy('pid', 'ASC')
+  ->range($offset, $limit)
+  ->execute();
+}
+
+/**
+ * Updates the table to indicated the objects' embargo lift events were sent.
+ *
+ * @param int $event_threshold
+ *   Timestamp of upper bound for objects to set the triggered state on.
+ *
+ * @return object
+ *   The results object from the update.
+ */
+function islandora_ip_embargo_set_event_triggered($event_threshold) {
+  return db_update('islandora_ip_embargo_embargoes')
+  ->fields(array('expiry_event_triggered' => 1))
+  ->condition('expiry', $event_threshold, '<=')
+  ->condition('expiry_event_triggered', 0, '=')
+  ->execute();
+}
+
+/**
  * Retrieve all objects effected by embargos, using pageination.
  *
  * @param int $limit
  *   The limit to set on the query.
  *
- * @return Array
+ * @return array
  *   The list of embargoed objects.
  */
 function islandora_ip_embargo_get_all_embargo_objects($limit = 10) {
