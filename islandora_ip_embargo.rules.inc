@@ -8,8 +8,6 @@
  * Implements hook_rules_event_info().
  */
 function islandora_ip_embargo_rules_event_info() {
-  $events = array();
-
   return array(
     'islandora_ip_embargo_embargo_to_be_lifted' => array(
       'group' => t('Islandora IP Embargo'),
@@ -23,6 +21,4 @@ function islandora_ip_embargo_rules_event_info() {
       ),
     ),
   );
-
-  return $events;
 }
