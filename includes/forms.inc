@@ -57,10 +57,15 @@ function islandora_ip_embargo_manage_embargo_list_form($form, &$form_state) {
 
   // Loop thru all the pids, populate the objects and get
   // relationships.
+
   while ($data = $embargoes->fetchObject()) {
     $fedora_object = islandora_object_load($data->pid);
-    $rels = $fedora_object->relationships->get();
 
+    if (! is_object($fedora_object)) {
+      continue;
+    }
+
+    $rels = $fedora_object->relationships->get();
     $options[$data->pid]['modify'] = l($fedora_object->label, 'islandora/object/' . $data->pid . '/ip_embargo');
     $options[$data->pid]['pid'] = l($data->pid, 'islandora/object/' . $data->pid . '/manage');
     $options[$data->pid]['collection'] = l($rels[1]['object']['value'], 'islandora/object/' . $rels[0]['object']['value']);
