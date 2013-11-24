@@ -20,7 +20,7 @@ function islandora_ip_embargo_permission() {
     ),
     ISLANDORA_IP_EMBARGO_CONTROL_EMBARGOES => array(
       'title' => t('Control embargoes'),
-      'description' => t("Create, edit, delete embargoes."),
+      'description' => t("Create, edit, delete an object's IP embargoes."),
     ),
     ISLANDORA_IP_EMBARGO_MANAGE_EMBARGOES => array(
       'title' => t('Manage embargoes'),
@@ -44,8 +44,9 @@ function islandora_ip_embargo_menu() {
       'access arguments' => array(ISLANDORA_IP_EMBARGO_ADMINISTER_PERMISSION),
     ),
     'admin/islandora/ip_embargo/lists' => array(
-      'title' => 'Embargo lists',
-      'description' => 'Configure IP Embargo lists.',
+      'title' => 'Network address lists',
+      'weight' => -10,
+      'description' => 'Configure IP Embargo network address lists.',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('islandora_ip_embargo_manage_lists_form'),
       'type' => MENU_DEFAULT_LOCAL_TASK,
@@ -54,7 +55,7 @@ function islandora_ip_embargo_menu() {
     ),
     'admin/islandora/ip_embargo/lists/add' => array(
       'title' => 'Add an Islandora IP Embargo list',
-      'description' => 'Create an IP Embargo list.',
+      'description' => 'Create a list of IP addresses.',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('islandora_ip_embargo_add_list_form'),
       'type' => MENU_NORMAL_ITEM,
@@ -98,7 +99,7 @@ function islandora_ip_embargo_menu() {
       'access arguments' => array(ISLANDORA_IP_EMBARGO_CONTROL_EMBARGOES),
     ),
     'admin/islandora/ip_embargo/manage' => array(
-      'title' => 'Manage Embargo Objects',
+      'title' => 'Manage Embargoed Objects',
       'description' => "View a list of all embargoed objects",
       'file' => 'includes/forms.inc',
       'page arguments' => array('islandora_ip_embargo_manage_embargo_list_form'),
@@ -177,7 +178,7 @@ function islandora_ip_embargo_cron() {
 /**
  * Implements hook_preprocess_theme().
  *
- * Checks the path, if it's an Islandora TN DS then it uses JS to wattermark
+ * Checks the path, if it's an Islandora TN DS then it uses JS to watermark
  * the resulting image.
  */
 function islandora_ip_embargo_preprocess_image(&$variables) {
