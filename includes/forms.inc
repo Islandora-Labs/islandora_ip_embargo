@@ -19,7 +19,7 @@ function islandora_ip_embargo_settings_form($form, &$form_state) {
   $form['islandora_ip_embargo_embargoed_redirect'] = array(
     '#type' => 'textfield',
     '#title' => t('Object embargoed redirect'),
-    '#description' => t('The URL to go to when an object is embaroged.'),
+    '#description' => t('The URL to go to when an object is embargoed.'),
     '#default_value' => variable_get(
       'islandora_ip_embargo_embargoed_redirect',
       ''
