@@ -138,7 +138,7 @@ function islandora_ip_embargo_islandora_datastream_access($op, $islandora_datast
 function islandora_ip_embargo_islandora_object_access($op, $islandora_object, $user) {
   module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
   // Handle an embargo.
-  if (islandora_ip_embargo_restrict_access($islandora_object->id)) {
+  if (islandora_ip_embargo_restrict_access($islandora_object->id) && !user_access(ISLANDORA_IP_EMBARGO_MANAGE_EMBARGOES)) {
     // If there is a redirect configured then use it. If not let Drupal do it.
     $redirect_url = variable_get('islandora_ip_embargo_embargoed_redirect', '');
     if ($redirect_url) {
