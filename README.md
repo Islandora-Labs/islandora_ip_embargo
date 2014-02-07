@@ -20,6 +20,7 @@ SUMMARY
 
 A Drupal based approach to embargoing content based on IP ranges.
 This module is not integrated with the Islandora Embargo module.
+This module breaks islandora_xml_site_map with it's redirects. 
 
 CONFIGURATION
 -------------
