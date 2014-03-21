@@ -141,8 +141,8 @@ function islandora_ip_embargo_islandora_object_access($op, $islandora_object, $u
   if (islandora_ip_embargo_restrict_access($islandora_object->id) && !user_access(ISLANDORA_IP_EMBARGO_MANAGE_EMBARGOES)) {
     // If there is a redirect configured then use it. If not let Drupal do it.
     $redirect_url = variable_get('islandora_ip_embargo_embargoed_redirect', '');
-    if ($redirect_url) {
-      if (strpos(current_path(), "islandora/object/{$islandora_object->id}") !== FALSE && strpos(current_path(), '/datastream/TN') === FALSE) {
+    if (strpos(current_path(), "islandora/object/{$islandora_object->id}") !== FALSE && strpos(current_path(), '/datastream/TN') === FALSE) {
+      if ($redirect_url) {
         drupal_goto($redirect_url);
       }
       else {
@@ -150,7 +150,7 @@ function islandora_ip_embargo_islandora_object_access($op, $islandora_object, $u
       }
     }
     else {
-      return FALSE;
+      return TRUE;
     }
   }
 
