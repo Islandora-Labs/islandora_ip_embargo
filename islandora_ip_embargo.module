@@ -34,7 +34,7 @@ function islandora_ip_embargo_permission() {
  */
 function islandora_ip_embargo_menu() {
   return array(
-    'admin/islandora/ip_embargo' => array(
+    'admin/islandora/tools/ip_embargo' => array(
       'title' => 'Islandora IP Embargo',
       'description' => 'Configure the Islandora IP Embargo module.',
       'type' => MENU_NORMAL_ITEM,
@@ -43,7 +43,7 @@ function islandora_ip_embargo_menu() {
       'file' => 'includes/forms.inc',
       'access arguments' => array(ISLANDORA_IP_EMBARGO_ADMINISTER_PERMISSION),
     ),
-    'admin/islandora/ip_embargo/lists' => array(
+    'admin/islandora/tools/ip_embargo/lists' => array(
       'title' => 'Network address lists',
       'weight' => -10,
       'description' => 'Configure IP Embargo network address lists.',
@@ -53,7 +53,7 @@ function islandora_ip_embargo_menu() {
       'file' => 'includes/forms.inc',
       'access arguments' => array(ISLANDORA_IP_EMBARGO_ADMINISTER_PERMISSION),
     ),
-    'admin/islandora/ip_embargo/lists/add' => array(
+    'admin/islandora/tools/ip_embargo/lists/add' => array(
       'title' => 'Add an Islandora IP Embargo list',
       'description' => 'Create a list of IP addresses.',
       'page callback' => 'drupal_get_form',
@@ -62,7 +62,7 @@ function islandora_ip_embargo_menu() {
       'file' => 'includes/forms.inc',
       'access arguments' => array(ISLANDORA_IP_EMBARGO_ADMINISTER_PERMISSION),
     ),
-    'admin/islandora/ip_embargo/ranges/add/%' => array(
+    'admin/islandora/tools/ip_embargo/ranges/add/%' => array(
       'title' => 'Add an Islandora IP Embargo Range',
       'description' => 'Create an IP Embargo address range.',
       'page callback' => 'drupal_get_form',
@@ -71,7 +71,7 @@ function islandora_ip_embargo_menu() {
       'file' => 'includes/forms.inc',
       'access arguments' => array(ISLANDORA_IP_EMBARGO_ADMINISTER_PERMISSION),
     ),
-    'admin/islandora/ip_embargo/misc' => array(
+    'admin/islandora/tools/ip_embargo/misc' => array(
       'title' => 'Islandora IP Embargo settings',
       'description' => 'Settings.',
       'page callback' => 'drupal_get_form',
@@ -80,7 +80,7 @@ function islandora_ip_embargo_menu() {
       'file' => 'includes/forms.inc',
       'access arguments' => array(ISLANDORA_IP_EMBARGO_ADMINISTER_PERMISSION),
     ),
-    'admin/islandora/ip_embargo/lists/%' => array(
+    'admin/islandora/tools/ip_embargo/lists/%' => array(
       'title' => 'Islandora IP Embargo list',
       'description' => "Configure an IP Embargo list's name and ranges.",
       'page callback' => 'drupal_get_form',
@@ -98,7 +98,7 @@ function islandora_ip_embargo_menu() {
       'type' => MENU_LOCAL_TASK,
       'access arguments' => array(ISLANDORA_IP_EMBARGO_CONTROL_EMBARGOES),
     ),
-    'admin/islandora/ip_embargo/manage' => array(
+    'admin/islandora/tools/ip_embargo/manage' => array(
       'title' => 'Manage Embargoed Objects',
       'description' => "View a list of all embargoed objects",
       'file' => 'includes/forms.inc',

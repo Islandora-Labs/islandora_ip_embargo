@@ -1,6 +1,6 @@
 name = "Islandora IP Embargo"
 description = "Lets Islandora objects be embargoed based on IP address ranges."
-package = Islandora
+package = Islandora Tools
 dependencies[] = islandora
 version = 7.x-dev
 core = 7.x
