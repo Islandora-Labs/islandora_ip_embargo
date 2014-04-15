@@ -128,7 +128,7 @@ function islandora_ip_embargo_manage_lists_form($form, &$form_state) {
   $options = array();
   $results = islandora_ip_embargo_get_lists();
   while ($data = $results->fetchObject()) {
-    $options[$data->lid]['name'] = l($data->name, 'admin/islandora/ip_embargo/lists/' . $data->lid);
+    $options[$data->lid]['name'] = l($data->name, 'admin/islandora/tools/ip_embargo/lists/' . $data->lid);
   }
   $header = array('name' => t('Name'));
   $form['Lists'] = array(
@@ -147,7 +147,7 @@ function islandora_ip_embargo_manage_lists_form($form, &$form_state) {
     '#value' => t('Delete'),
   );
   $form['Add'] = array(
-    '#markup' => l(t('Add network list'), 'admin/islandora/ip_embargo/lists/add'),
+    '#markup' => l(t('Add network list'), 'admin/islandora/tools/ip_embargo/lists/add'),
   );
 
   return $form;
@@ -230,7 +230,7 @@ function islandora_ip_embargo_add_list_form($form, &$form_state) {
 function islandora_ip_embargo_add_list_form_submit($form, &$form_state) {
   module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
   islandora_ip_embargo_add_list($form_state['values']['name']);
-  $form_state['redirect'] = 'admin/islandora/ip_embargo';
+  $form_state['redirect'] = 'admin/islandora/tools/ip_embargo';
 }
 
 /**
@@ -289,7 +289,7 @@ function islandora_ip_embargo_edit_list_form($form, &$form_state, $list_identifi
     '#submit' => array('islandora_ip_embargo_edit_list_form_range_submit'),
   );
   $form['Add'] = array(
-    '#markup' => l(t('Add IP address range'), "admin/islandora/ip_embargo/ranges/add/$list_identifier"),
+    '#markup' => l(t('Add IP address range'), "admin/islandora/tools/ip_embargo/ranges/add/$list_identifier"),
   );
   return $form;
 }
@@ -375,7 +375,7 @@ function islandora_ip_embargo_add_range_form_submit($form, &$form_state) {
     $form_state['values']['high_end']
   );
 
-  $form_state['redirect'] = "admin/islandora/ip_embargo/lists/$list_identifier";
+  $form_state['redirect'] = "admin/islandora/tools/ip_embargo/lists/$list_identifier";
 }
 
 /**
