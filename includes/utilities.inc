@@ -127,6 +127,7 @@ function islandora_ip_embargo_remove_range($range_identifier) {
  *   The high end of the IP range.
  */
 function islandora_ip_embargo_add_ip_range($list_identifier, $low_end, $high_end) {
+  dd($list_identifier, 'List identifier in add function');
   db_insert('islandora_ip_embargo_ip_ranges')
   ->fields(array(
     'low_end' => $low_end,
