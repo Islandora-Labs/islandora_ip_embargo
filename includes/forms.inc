@@ -369,22 +369,15 @@ function islandora_ip_embargo_add_range_form_validate(array $form, array &$form_
   $comparable_low = ip2long($form_state['values']['low_end']);
   $comparable_high = ip2long($form_state['values']['high_end']);
 
-  $error = FALSE;
-  if (empty($comparable_low)) {
-    $error = TRUE;
+  if ($comparable_low === FALSE) {
     form_set_error('low_end', t('Low end IP is not valid.'));
   }
 
-  if (empty($comparable_high)) {
-    $error = TRUE;
+  if ($comparable_high === FALSE) {
     form_set_error('high_end', t('High end IP is not valid.'));
   }
 
-  if ($error) {
-    form_set_error('', t('IP addresses must be in dot-decimal notation with no leading zeros.'));
-  }
-
-  if (!$error && $comparable_low > $comparable_high) {
+  if ($comparable_low !== FALSE && $comparable_high !== FALSE &&  $comparable_low > $comparable_high) {
     form_set_error('', t('IP range is not valid. The low address is greater than the high.'));
   }
 }
