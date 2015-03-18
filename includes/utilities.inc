@@ -83,24 +83,25 @@ function islandora_ip_embargo_get_list_name($list_identifier) {
 /**
  * Get a list's information.
  *
- * This is not a general function it is used for pagination.
- *
  * @param int $list_identifier
  *   The identifier of the list.
+ * @param bool $page_results
+ *   TRUE to page results for display, otherwise return all results.
  *
  * @return SelectQuery
  *   The query return.
  */
-function islandora_ip_embargo_get_lists_information($list_identifier) {
+function islandora_ip_embargo_get_lists_information($list_identifier, $page_results = TRUE) {
   $query = db_select("islandora_ip_embargo_lists", 'lists');
   $query->join('islandora_ip_embargo_ip_ranges', 'ranges', 'lists.lid = ranges.lid');
   $query = $query->fields('ranges');
   $query = $query->fields('lists');
   $query = $query->condition('lists.lid', $list_identifier);
-  $query = $query->extend('TableSort');
-  $query = $query->extend('PagerDefault');
-  $query = $query->limit(10);
-
+  if ($page_results) {
+    $query = $query->extend('TableSort');
+    $query = $query->extend('PagerDefault');
+    $query = $query->limit(10);
+  }
   return $query->execute();
 }
 
@@ -394,7 +395,7 @@ function islandora_ip_embargo_restrict_access($pid) {
   $embargo_result = islandora_ip_embargo_get_embargo($pid);
   if ($embargo_result->rowCount()) {
     $embargo_info = $embargo_result->fetchObject();
-    $list_results = islandora_ip_embargo_get_lists_information($embargo_info->lid);
+    $list_results = islandora_ip_embargo_get_lists_information($embargo_info->lid, FALSE);
     if ($list_results->rowCount()) {
       while ($list_info = $list_results->fetchObject()) {
         if (islandora_ip_embargo_ip_in_range($list_info->low_end, $list_info->high_end)) {
