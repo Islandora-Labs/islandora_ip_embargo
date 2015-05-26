@@ -145,7 +145,7 @@ function islandora_ip_embargo_islandora_object_access($op, $islandora_object, $u
       if (strpos(current_path(), "islandora/object/{$islandora_object->id}") !== FALSE && strpos(current_path(), '/datastream/TN') === FALSE) {
         if (variable_get('islandora_ip_embargo_embargoed_redirect_append_url', 0)) {
           global $base_url;
-          $redirect_target = $redirect_url . urlencode($base_url . '/' . current_path());
+          $redirect_target = $redirect_url . $base_url . '/' . current_path();
           drupal_goto($redirect_target);
         }
         else {
