@@ -25,6 +25,13 @@ function islandora_ip_embargo_settings_form($form, &$form_state) {
       ''
     ),
   );
+  $form['islandora_ip_embargo_embargoed_redirect_append_url'] = array(
+    '#type' => 'checkbox',
+    '#title' => t("Append embargoed object's URL."),
+    '#default_value' => variable_get('islandora_ip_embargo_embargoed_redirect_append_url', 0),
+    '#description' => t("Check this option if you want to append the embargoed object's URL
+      before redirecting (for example, for use with Ezproxy)."),
+  );
   $form['islandora_ip_embargo_days_before_embargo_trigger'] = array(
     '#type' => 'textfield',
     '#title' => t('Days before embargo alert'),
