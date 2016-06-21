@@ -111,6 +111,8 @@ function islandora_ip_embargo_uninstall() {
   $drupal_variables = array(
     'islandora_ip_embargo_embargoed_redirect',
     'islandora_ip_embargo_days_before_embargo_trigger',
+    'islandora_ip_embargo_overlay_text',
+    'islandora_ip_embargo_overlay_text_color',
   );
   foreach ($drupal_variables as $drupal_variable) {
     variable_del($drupal_variable);

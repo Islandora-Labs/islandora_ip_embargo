@@ -41,8 +41,32 @@ function islandora_ip_embargo_settings_form($form, &$form_state) {
       0
     ),
   );
+  $form['islandora_ip_embargo_overlay_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Embargoed item overlay text'),
+    '#description' => t('Value for overlay text on embargoed items.'),
+    '#default_value' => variable_get(
+      'islandora_ip_embargo_overlay_text',
+      'EMBARGOED'
+    ),
+  );
+  $form['islandora_ip_embargo_overlay_text_color'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Embargoed item overlay text color'),
+    '#description' => t('Value for overlay text color in hexideciamal format (E.g. FF0000).'),
+    '#maxlength' => 6,
+    '#default_value' => variable_get(
+      'islandora_ip_embargo_overlay_text_color',
+      'FF0000'
+    ),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
+    '#submit' => array('islandora_ip_embargo_settings_submit'),
+  );
 
-  return system_settings_form($form);
+  return $form;
 }
 
 /**
@@ -100,6 +124,42 @@ function islandora_ip_embargo_manage_embargo_list_form($form, &$form_state) {
   );
 
   return $form;
+}
+
+/**
+ * Validate settings input.
+ *
+ * @param array $form
+ *   The Drupal form definition.
+ * @param array $form_state
+ *   The Drupal form state.
+ */
+function islandora_ip_embargo_settings_form_validate($form, &$form_state) {
+  $text = trim($form_state['values']['islandora_ip_embargo_overlay_text']);
+  $color = $form_state['values']['islandora_ip_embargo_overlay_text_color'];
+  if (empty($text)) {
+    form_set_error('islandora_ip_embargo_overlay_text', t('Overlay text field cannot be empty.'));
+  }
+  if (!preg_match('/([a-f]|[A-F]|[0-9]){6}(([a-f]|[A-F]|[0-9]){3})?\b/', $color)) {
+    form_set_error('islandora_ip_embargo_overlay_text_color', t('Overlay text color must match hexideciamal format, there must be 6 characters and only A-F and 0-9 are accepted (E.g. ABC987).'));
+  }
+}
+
+/**
+ * Set variables and confirm submit success.
+ *
+ * @param array $form
+ *   The Drupal form definition.
+ * @param array $form_state
+ *   The Drupal form state.
+ */
+function islandora_ip_embargo_settings_submit($form, &$form_state) {
+  variable_set('islandora_ip_embargo_embargoed_redirect', $form_state['values']['islandora_ip_embargo_embargoed_redirect']);
+  variable_set('islandora_ip_embargo_embargoed_redirect_append_url', $form_state['values']['islandora_ip_embargo_embargoed_redirect_append_url']);
+  variable_set('islandora_ip_embargo_days_before_embargo_trigger', $form_state['values']['islandora_ip_embargo_days_before_embargo_trigger']);
+  variable_set('islandora_ip_embargo_overlay_text', trim($form_state['values']['islandora_ip_embargo_overlay_text']));
+  variable_set('islandora_ip_embargo_overlay_text_color', strtoupper($form_state['values']['islandora_ip_embargo_overlay_text_color']));
+  drupal_set_message(t('The configuration options have been saved.'));
 }
 
 /**
