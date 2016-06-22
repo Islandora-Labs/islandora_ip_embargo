@@ -543,10 +543,10 @@ function islandora_ip_embargo_object_embargo_form_submit($form, &$form_state) {
  *
  * @param array $element
  *   The Drupal element data.
- * @param array $form
- *   The Drupal form definition.
  * @param array $form_state
  *   The Drupal form state.
+ * @param array $form
+ *   The Drupal form definition.
  */
 function islandora_ip_embargo_hex_validate($element, &$form_state, $form) {
   $color = $element['#value'];
