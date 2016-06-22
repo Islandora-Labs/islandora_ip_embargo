@@ -195,7 +195,7 @@ function islandora_ip_embargo_preprocess_image(&$variables) {
   $image_path_parts = explode('/', $image_path);
   $size_of_image_path = count($image_path_parts);
   $text = variable_get('islandora_ip_embargo_overlay_text', 'EMBARGOED');
-  $color = '#' . variable_get('islandora_ip_embargo_overlay_text_color', 'FF0000');
+  $color = variable_get('islandora_ip_embargo_overlay_text_color', '#FF0000');
 
   if ($image_path_parts[$size_of_image_path - 1] == 'view' &&
       $image_path_parts[$size_of_image_path - 2] == 'TN' &&
@@ -206,8 +206,7 @@ function islandora_ip_embargo_preprocess_image(&$variables) {
 
     if ($embargo_result->rowCount()) {
       drupal_add_js(drupal_get_path('module', 'islandora_ip_embargo') . '/js/embargoed_images.js');
-      drupal_add_js(array('islandora_ip_embargo' => array('text' => $text)), array('type' => 'setting'));
-      drupal_add_js(array('islandora_ip_embargo' => array('color' => $color)), array('type' => 'setting'));
+      drupal_add_js(array('islandora_ip_embargo' => array('text' => $text, 'color' => $color)), array('type' => 'setting'));
       if (isset($variables['#attributes']['class'])) {
         $variables['attributes']['class'] = $variables['#attributes']['class']
           . 'islandora_ip_embargo_embargoed';
