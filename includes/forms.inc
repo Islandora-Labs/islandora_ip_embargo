@@ -54,13 +54,13 @@ function islandora_ip_embargo_settings_form($form, &$form_state) {
   $form['islandora_ip_embargo_overlay_text_color'] = array(
     '#type' => 'textfield',
     '#title' => t('Embargoed item overlay text color'),
-    '#description' => t('Overlay text color in hexideciamal format (E.g. #FF0000).'),
-    '#maxlength' => 7,
+    '#description' => t('Overlay text color in hexideciamal format (E.g. FF0000).'),
+    '#maxlength' => 6,
     '#required' => TRUE,
     '#element_validate' => array('islandora_ip_embargo_hex_validate'),
     '#default_value' => variable_get(
       'islandora_ip_embargo_overlay_text_color',
-      '#FF0000'
+      'FF0000'
     ),
   );
 
@@ -550,7 +550,7 @@ function islandora_ip_embargo_object_embargo_form_submit($form, &$form_state) {
  */
 function islandora_ip_embargo_hex_validate($element, &$form_state, $form) {
   $color = $element['#value'];
-  if (!color_valid_hexadecimal_string($color)) {
-    form_set_error('islandora_ip_embargo_overlay_text_color', t('Color must match hexideciamal format, requires # followed by A-F and 0-9 characters only (E.g. #ABC987).'));
+  if (!ctype_xdigit($color) && strlen($color) === 6) {
+    form_set_error('islandora_ip_embargo_overlay_text_color', t('Color must match hexideciamal format, requires 6 characters and A-F 0-9 characters apply (E.g. F0A3B1).'));
   }
 }

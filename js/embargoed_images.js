@@ -10,7 +10,7 @@ Drupal.behaviors.islandora_ip_embargo = {
       $('.islandora_ip_embargo_embargoed').after('<span class="islandora_ip_embargo_embargoed"></span>');
       $('.islandora_ip_embargo_embargoed').text(Drupal.t(Drupal.settings.islandora_ip_embargo.text));
       $('span.islandora_ip_embargo_embargoed').css({
-        'color' : Drupal.settings.islandora_ip_embargo.color,
+        'color' : '#' + Drupal.settings.islandora_ip_embargo.color,
         'left' : '0',
         'padding' : '0.5em',
         'font-size' : '1.25em',

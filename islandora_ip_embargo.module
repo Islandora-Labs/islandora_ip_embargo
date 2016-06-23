@@ -195,7 +195,7 @@ function islandora_ip_embargo_preprocess_image(&$variables) {
   $image_path_parts = explode('/', $image_path);
   $size_of_image_path = count($image_path_parts);
   $text = variable_get('islandora_ip_embargo_overlay_text', 'EMBARGOED');
-  $color = variable_get('islandora_ip_embargo_overlay_text_color', '#FF0000');
+  $color = variable_get('islandora_ip_embargo_overlay_text_color', 'FF0000');
 
   if ($image_path_parts[$size_of_image_path - 1] == 'view' &&
       $image_path_parts[$size_of_image_path - 2] == 'TN' &&
