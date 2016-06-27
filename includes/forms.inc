@@ -41,6 +41,28 @@ function islandora_ip_embargo_settings_form($form, &$form_state) {
       0
     ),
   );
+  $form['islandora_ip_embargo_overlay_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Embargoed item overlay text'),
+    '#description' => t('Overlay text on embargoed items.'),
+    '#required' => TRUE,
+    '#default_value' => variable_get(
+      'islandora_ip_embargo_overlay_text',
+      'EMBARGOED'
+    ),
+  );
+  $form['islandora_ip_embargo_overlay_text_color'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Embargoed item overlay text color'),
+    '#description' => t('Overlay text color in hexideciamal format (E.g. FF0000 or F0A).'),
+    '#maxlength' => 6,
+    '#required' => TRUE,
+    '#element_validate' => array('islandora_ip_embargo_hex_validate'),
+    '#default_value' => variable_get(
+      'islandora_ip_embargo_overlay_text_color',
+      'FF0000'
+    ),
+  );
 
   return system_settings_form($form);
 }
@@ -514,4 +536,21 @@ function islandora_ip_embargo_object_embargo_form_submit($form, &$form_state) {
     );
   }
   return $form;
+}
+
+/**
+ * Validate hexidecimal color input.
+ *
+ * @param array $element
+ *   The Drupal element data.
+ * @param array $form_state
+ *   The Drupal form state.
+ * @param array $form
+ *   The Drupal form definition.
+ */
+function islandora_ip_embargo_hex_validate($element, &$form_state, $form) {
+  $color = $element['#value'];
+  if (!(ctype_xdigit($color) && (strlen($color) === 6 || strlen($color) === 3))) {
+    form_set_error('islandora_ip_embargo_overlay_text_color', t('Color must match hexideciamal format, requires 3 or 6 characters and A-F 0-9 characters apply (E.g. F0A3B1 or F1A).'));
+  }
 }
