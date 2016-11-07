@@ -17,9 +17,17 @@ function islandora_ip_embargo_get_lists() {
   $query = $query->fields('islandora_ip_embargo_lists');
   $query = $query->extend('TableSort');
   $query = $query->extend('PagerDefault');
-  $query = $query->limit(10);
+  $query = $query->limit(100);
 
   return $query->execute();
+}
+
+function islandora_ip_embargo_get_ranges($lid){
+    $ranges = db_select('islandora_ip_embargo_ip_ranges')
+            ->fields('islandora_ip_embargo_ip_ranges')
+            ->condition('lid', $lid)
+            ->execute();
+  return $ranges;
 }
 
 /**
@@ -67,17 +75,28 @@ function islandora_ip_embargo_remove_list($list_identifier) {
  * @param int $list_identifier
  *   The identifier of the list to delete.
  *
- * @return string
- *   The human readable name of the list.
+ * @return object $data
+ *   The list object.
+ *   
  */
-function islandora_ip_embargo_get_list_name($list_identifier) {
+function islandora_ip_embargo_get_list_object($list_identifier) {
   $list = db_select('islandora_ip_embargo_lists')
   ->fields('islandora_ip_embargo_lists')
   ->condition('lid', $list_identifier)
   ->execute();
   $data = $list->fetchObject();
 
-  return $data->name;
+  return $data;
+}
+
+function islandora_ip_embargo_get_list_object_by_name($list_name) {
+  $list = db_select('islandora_ip_embargo_lists')
+  ->fields('islandora_ip_embargo_lists')
+  ->condition('name', $list_name)
+  ->execute();
+  $data = $list->fetchObject();
+
+  return $data;
 }
 
 /**
