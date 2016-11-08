@@ -70,33 +70,30 @@ function islandora_ip_embargo_remove_list($list_identifier) {
 }
 
 /**
- * Get the name of a list.
+ * Get the a list object.
  *
- * @param int $list_identifier
- *   The identifier of the list to delete.
+ * @param string $field
+ *   Field in islandora_ip_embargo_lists to use for the lookup.
+ *   Must be one of 'lid' | 'name'; or error.
+ * 
+ * @param string $value
+ *   Value of the field used for the lookup.
  *
  * @return object $data
  *   The list object.
- *   
+ * 
  */
-function islandora_ip_embargo_get_list_object($list_identifier) {
-  $list = db_select('islandora_ip_embargo_lists')
-  ->fields('islandora_ip_embargo_lists')
-  ->condition('lid', $list_identifier)
+function islandora_ip_embargo_get_list_object_by($field, $value) {
+  if(!in_array($field, array('lid', 'name'))){
+    throw new Exception("Incorrect field: ($field) given for list lookup");
+  }
+
+  $list = db_select('islandora_ip_embargo_lists', 'i')
+  ->fields("i")
+  ->condition($field, $value)
+  ->range(0,1)
   ->execute();
-  $data = $list->fetchObject();
-
-  return $data;
-}
-
-function islandora_ip_embargo_get_list_object_by_name($list_name) {
-  $list = db_select('islandora_ip_embargo_lists')
-  ->fields('islandora_ip_embargo_lists')
-  ->condition('name', $list_name)
-  ->execute();
-  $data = $list->fetchObject();
-
-  return $data;
+  return $list->fetchObject();
 }
 
 /**

@@ -278,7 +278,7 @@ function islandora_ip_embargo_add_list_form_submit($form, &$form_state) {
 function islandora_ip_embargo_edit_list_form($form, &$form_state, $list_identifier) {
   module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
   $list_information = islandora_ip_embargo_get_lists_information($list_identifier);
-  $list_name = islandora_ip_embargo_get_list_object($list_identifier)->name;
+  $list_name = islandora_ip_embargo_get_list_object_by('lid', $list_identifier)->name;
   $form_state['storage']['islandora_ip_embargo']['list_identifier'] = $list_identifier;
 
   $header = array('low_end' => t('low end'), 'high_end' => t('high end'));
