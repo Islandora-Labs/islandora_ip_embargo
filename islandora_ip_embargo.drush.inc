@@ -91,7 +91,7 @@ function drush_islandora_ip_embargo_addRange(){
 function is_duplicate_range($lid, $low, $high){
     foreach(islandora_ip_embargo_get_ranges($lid) as $range){
         if($range->low_end == $low && $range->high_end == $high){
-            drush_set_error("Duplicate IP range.");
+            drupal_set_message(t("Duplicate IP range. Nothing changed."));
             return true;
         }
     }
@@ -144,10 +144,9 @@ function drush_islandora_ip_embargo_set_embargo_for_item(){
     // check for good pid.
     $object = islandora_object_load($pid);
     if(!$object){
-        drush_set_error("Object $pid does not exist in this repository.");
-        return;
-    }else{
-        $exp_str = $expiry == NULL ? "Never" : $expiry;
+        //drupal_set_message(t("Object %p does not exist in this repository.", array('%p' => $pid)));
+    }
+    $exp_str = $expiry == NULL ? "Never" : $expiry;
 
         // determine whether an embargo exists already for an object.
         $update = islandora_ip_embargo_get_embargo($pid)->fetchObject();
