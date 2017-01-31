@@ -422,6 +422,12 @@ function islandora_ip_embargo_restrict_access($pid) {
           $open_access = TRUE;
         }
       }
+      global $user;
+      $roles_exempt = explode(',',variable_get('islandora_ip_embargo_roles_exempt',''));
+      $qualifying_roles = array_intersect($roles_exempt, $user->roles);
+      if(!empty($qualifying_roles)){
+          $open_access = TRUE;
+      }
     }
     else {
       $open_access = TRUE;

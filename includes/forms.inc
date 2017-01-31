@@ -74,6 +74,14 @@ function islandora_ip_embargo_settings_form($form, &$form_state) {
       '127.0.0.1'
     ),
   );
+  $form['islandora_ip_embargo_roles_exempt'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Roles Exempt'),
+    '#description' => t('Roles for which embargoes never apply.'),
+    '#maxlength' => 255,
+    '#required' => FALSE,
+    '#default_value' => variable_get('islandora_ip_embargo_roles_exempt',''),
+  );
 
   return system_settings_form($form);
 }
