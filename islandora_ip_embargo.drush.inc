@@ -42,6 +42,29 @@ function islandora_ip_embargo_drush_command(){
         ),
         'aliases' => array('iipese'),
     );
+    $items['islandora-ip-embargo-set-embargo-from-pid-list'] = array(
+      'description' => dt('Create a collection container.'),
+      'examples' => array('drush islandora-utils-create-collection --parent=islandora:root --namespace=my:collection'),
+      'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_LOGIN,
+      'drupal dependencies' => array(
+        'islandora',
+        'islandora_ip_embargo', //include version dependency ?
+      ),
+      'options' => array(
+        'pidsfile'  => array(
+          'description' => dt('File containing a comma-separated string of pids'),
+          'required'    => FALSE
+        ),
+        'lists' => array(
+          'description' => dt('comma-separated names of network lists to set.'),
+          'required' => TRUE,
+        ),
+        'expiry' => array(
+          dt("When to expire the embargo."),
+          'required' => FALSE,
+        )
+      ),
+    );
     return $items;
 }
 
@@ -119,7 +142,25 @@ function drush_islandora_ip_embargo_set_embargo_for_item(){
         'list' => drush_get_option('list'),
         'expiry' => drush_get_option('expiry'),
     );
+    make_embargo_from_params($params);
+}
 
+function drush_islandora_ip_embargo_set_embargo_from_pid_list(){
+    $pids   = explode(',', drush_get_option('pidsfile'));
+    $expiry = drush_get_option('expiry');
+    $lists  = explode(',', drush_get_option('lists'));
+    $params = array('expiry' => $expiry);
+
+    foreach ($lists as $list){
+        foreach($pids as $pid){
+            $params['pid'] = $pid;
+            $params['list'] = $list;
+            make_embargo_from_params($params);
+        }
+    }
+}
+
+function make_embargo_from_params($params){
     $pid = $params['pid'];
     $list = islandora_ip_embargo_get_list_object_by('name', $params['list']);
 
