@@ -22,7 +22,7 @@ function islandora_ip_embargo_get_lists() {
   return $query->execute();
 }
 
-function islandora_ip_embargo_get_ranges($lid){
+function islandora_ip_embargo_get_ranges($lid) {
     $ranges = db_select('islandora_ip_embargo_ip_ranges')
             ->fields('islandora_ip_embargo_ip_ranges')
             ->condition('lid', $lid)
@@ -84,14 +84,14 @@ function islandora_ip_embargo_remove_list($list_identifier) {
  * 
  */
 function islandora_ip_embargo_get_list_object_by($field, $value) {
-  if(!in_array($field, array('lid', 'name'))){
+  if (!in_array($field, array('lid', 'name'))) {
     throw new Exception("Incorrect field: ($field) given for list lookup");
   }
 
   $list = db_select('islandora_ip_embargo_lists', 'i')
   ->fields("i")
   ->condition($field, $value)
-  ->range(0,1)
+  ->range(0, 1)
   ->execute();
   return $list->fetchObject();
 }
