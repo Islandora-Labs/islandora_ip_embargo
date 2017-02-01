@@ -146,7 +146,7 @@ function drush_islandora_ip_embargo_set_embargo_for_item(){
 }
 
 function drush_islandora_ip_embargo_set_embargo_from_pid_list(){
-    $pids   = explode(',', drush_get_option('pidsfile'));
+    $pids   = explode(',', file_get_contents(drush_get_option('pidsfile')));
     $expiry = drush_get_option('expiry');
     $lists  = explode(',', drush_get_option('lists'));
     $params = array('expiry' => $expiry);
@@ -161,6 +161,7 @@ function drush_islandora_ip_embargo_set_embargo_from_pid_list(){
 }
 
 function make_embargo_from_params($params){
+    module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
     $pid = $params['pid'];
     $list = islandora_ip_embargo_get_list_object_by('name', $params['list']);
 
