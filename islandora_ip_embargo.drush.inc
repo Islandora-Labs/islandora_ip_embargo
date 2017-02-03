@@ -182,7 +182,7 @@ function drush_islandora_ip_embargo_set_embargo_for_item() {
 /**
  * Drush command; given a list of pids, embargo each.
  *
- * Similar to drush_islandora_ip_embargo_set_embargo_for_item();
+ * Similar to function drush_islandora_ip_embargo_set_embargo_for_item;
  */
 function drush_islandora_ip_embargo_set_embargo_from_pid_list() {
   $pids = explode(',', file_get_contents(drush_get_option('pidsfile')));
