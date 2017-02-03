@@ -89,9 +89,8 @@ function islandora_ip_embargo_remove_list($list_identifier) {
  * @param string $value
  *   Value of the field used for the lookup.
  *
- * @return object $data
+ * @return object
  *   The list object.
- * 
  */
 function islandora_ip_embargo_get_list_object_by($field, $value) {
   if (!in_array($field, array('lid', 'name'))) {
