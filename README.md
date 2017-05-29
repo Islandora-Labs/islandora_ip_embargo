@@ -28,4 +28,5 @@ installing the Rules https://drupal.org/project/rules module.
 
 Current maintainers:
 
+* [William Panting](https://github.com/willtp87)
 * [discoverygarden](https://github.com/discoverygarden)
