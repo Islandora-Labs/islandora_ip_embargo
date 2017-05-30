@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * This file holds forms for islandora_ip_embargo
@@ -21,8 +22,7 @@ function islandora_ip_embargo_settings_form($form, &$form_state) {
     '#title' => t('Object embargoed redirect'),
     '#description' => t('The URL to go to when an object is embargoed.'),
     '#default_value' => variable_get(
-      'islandora_ip_embargo_embargoed_redirect',
-      ''
+        'islandora_ip_embargo_embargoed_redirect', ''
     ),
   );
   $form['islandora_ip_embargo_embargoed_redirect_append_url'] = array(
@@ -37,8 +37,7 @@ function islandora_ip_embargo_settings_form($form, &$form_state) {
     '#title' => t('Days before embargo alert'),
     '#description' => t('Rules will be triggered this number of days before an embargo is lifted.'),
     '#default_value' => variable_get(
-      'islandora_ip_embargo_days_before_embargo_trigger',
-      0
+        'islandora_ip_embargo_days_before_embargo_trigger', 0
     ),
   );
   $form['islandora_ip_embargo_overlay_text'] = array(
@@ -47,8 +46,7 @@ function islandora_ip_embargo_settings_form($form, &$form_state) {
     '#description' => t('Overlay text on embargoed items.'),
     '#required' => TRUE,
     '#default_value' => variable_get(
-      'islandora_ip_embargo_overlay_text',
-      'EMBARGOED'
+        'islandora_ip_embargo_overlay_text', 'EMBARGOED'
     ),
   );
   $form['islandora_ip_embargo_overlay_text_color'] = array(
@@ -59,9 +57,26 @@ function islandora_ip_embargo_settings_form($form, &$form_state) {
     '#required' => TRUE,
     '#element_validate' => array('islandora_ip_embargo_hex_validate'),
     '#default_value' => variable_get(
-      'islandora_ip_embargo_overlay_text_color',
-      'FF0000'
+        'islandora_ip_embargo_overlay_text_color', 'FF0000'
     ),
+  );
+  $form['islandora_ip_embargo_djatoka_public_ip_address'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Djatoka public ip'),
+    '#description' => t('IP address from which djatoka makes requests.'),
+    '#maxlength' => 15,
+    '#required' => FALSE,
+    '#default_value' => variable_get(
+        'islandora_ip_embargo_djatoka_public_ip_address', '127.0.0.1'
+    ),
+  );
+  $form['islandora_ip_embargo_roles_exempt'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Roles Exempt'),
+    '#description' => t('Roles for which embargoes never apply.'),
+    '#maxlength' => 255,
+    '#required' => FALSE,
+    '#default_value' => variable_get('islandora_ip_embargo_roles_exempt', ''),
   );
 
   return system_settings_form($form);
@@ -278,7 +293,7 @@ function islandora_ip_embargo_add_list_form_submit($form, &$form_state) {
 function islandora_ip_embargo_edit_list_form($form, &$form_state, $list_identifier) {
   module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
   $list_information = islandora_ip_embargo_get_lists_information($list_identifier);
-  $list_name = islandora_ip_embargo_get_list_name($list_identifier);
+  $list_name = islandora_ip_embargo_get_list_object_by('lid', $list_identifier)->name;
   $form_state['storage']['islandora_ip_embargo']['list_identifier'] = $list_identifier;
 
   $header = array('low_end' => t('low end'), 'high_end' => t('high end'));
@@ -334,8 +349,7 @@ function islandora_ip_embargo_edit_list_form($form, &$form_state, $list_identifi
 function islandora_ip_embargo_edit_list_form_name_submit($form, &$form_state) {
   module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
   islandora_ip_embargo_edit_list(
-    $form_state['values']['name'],
-    $form_state['storage']['islandora_ip_embargo']['list_identifier']);
+      $form_state['values']['name'], $form_state['storage']['islandora_ip_embargo']['list_identifier']);
 }
 
 /**
@@ -406,7 +420,7 @@ function islandora_ip_embargo_add_range_form_validate(array $form, array &$form_
     form_set_error('high_end', t('High end IP is not valid.'));
   }
 
-  if ($comparable_low !== FALSE && $comparable_high !== FALSE &&  $comparable_low > $comparable_high) {
+  if ($comparable_low !== FALSE && $comparable_high !== FALSE && $comparable_low > $comparable_high) {
     form_set_error('', t('IP range is not valid. The low address is greater than the high.'));
   }
 }
@@ -424,9 +438,7 @@ function islandora_ip_embargo_add_range_form_submit($form, &$form_state) {
   $list_identifier = $form_state['storage']['islandora_ip_embargo']['list_identifier'];
 
   islandora_ip_embargo_add_ip_range(
-    $list_identifier,
-    $form_state['values']['low_end'],
-    $form_state['values']['high_end']
+      $list_identifier, $form_state['values']['low_end'], $form_state['values']['high_end']
   );
 
   $form_state['redirect'] = "admin/islandora/tools/ip_embargo/lists/$list_identifier";
@@ -508,20 +520,13 @@ function islandora_ip_embargo_object_embargo_form_submit($form, &$form_state) {
   $expiry = NULL;
   if (!$form_state['values']['never_expire']) {
     $expiry = mktime(
-      0,
-      0,
-      0,
-      $form_state['values']['expiry_date']['month'],
-      $form_state['values']['expiry_date']['day'],
-      $form_state['values']['expiry_date']['year']
+        0, 0, 0, $form_state['values']['expiry_date']['month'], $form_state['values']['expiry_date']['day'], $form_state['values']['expiry_date']['year']
     );
   }
   if ($form_state['storage']['islandroa_ip_embargo']['update']) {
     if ($form_state['values']['lists'] != 'none') {
       islandora_ip_embargo_update_embargo(
-        $form_state['storage']['islandroa_ip_embargo']['pid'],
-        $form_state['values']['lists'],
-        $expiry
+          $form_state['storage']['islandroa_ip_embargo']['pid'], $form_state['values']['lists'], $expiry
       );
     }
     else {
@@ -530,9 +535,7 @@ function islandora_ip_embargo_object_embargo_form_submit($form, &$form_state) {
   }
   else {
     islandora_ip_embargo_set_embargo(
-      $form_state['storage']['islandroa_ip_embargo']['pid'],
-      $form_state['values']['lists'],
-      $expiry
+        $form_state['storage']['islandroa_ip_embargo']['pid'], $form_state['values']['lists'], $expiry
     );
   }
   return $form;
