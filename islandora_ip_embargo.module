@@ -190,12 +190,17 @@ function islandora_ip_embargo_cron() {
  */
 function islandora_ip_embargo_preprocess_image(&$variables) {
   module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
+  // XXX: We manually split up the URL here instead of using parse_url
+  // because the parse_url function interperates the : in the path as 
+  // a port number and chokes if the PID is > 65535. We want to keep this
+  // check as fast as we can because it could potentially be done a large 
+  // number of times in a large render array, so we don't want to load the
+  // whole islandora object, just to check the URL. 
 
-  $image_path = parse_url($variables['path'], PHP_URL_PATH);
+  // Strip the query parameters from URL.
+  $image_path = strtok($variables['path'], '?');
   $image_path_parts = explode('/', $image_path);
   $size_of_image_path = count($image_path_parts);
-  $text = variable_get('islandora_ip_embargo_overlay_text', 'EMBARGOED');
-  $color = variable_get('islandora_ip_embargo_overlay_text_color', 'FF0000');
 
   if ($image_path_parts[$size_of_image_path - 1] == 'view' &&
       $image_path_parts[$size_of_image_path - 2] == 'TN' &&
@@ -203,6 +208,9 @@ function islandora_ip_embargo_preprocess_image(&$variables) {
 
     $pid = urldecode($image_path_parts[$size_of_image_path - 4]);
     $embargo_result = islandora_ip_embargo_get_embargo($pid);
+
+    $text = variable_get('islandora_ip_embargo_overlay_text', 'EMBARGOED');
+    $color = variable_get('islandora_ip_embargo_overlay_text_color', 'FF0000');
 
     if ($embargo_result->rowCount()) {
       drupal_add_js(drupal_get_path('module', 'islandora_ip_embargo') . '/js/embargoed_images.js');
