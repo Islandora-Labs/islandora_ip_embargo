@@ -191,11 +191,11 @@ function islandora_ip_embargo_cron() {
 function islandora_ip_embargo_preprocess_image(&$variables) {
   module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
   // XXX: We manually split up the URL here instead of using parse_url
-  // because the parse_url function interperates the : in the path as 
+  // because the parse_url function interperates the : in the path as
   // a port number and chokes if the PID is > 65535. We want to keep this
-  // check as fast as we can because it could potentially be done a large 
+  // check as fast as we can because it could potentially be done a large
   // number of times in a large render array, so we don't want to load the
-  // whole islandora object, just to check the URL. 
+  // whole islandora object, just to check the URL.
 
   // Strip the query parameters from URL.
   $image_path = strtok($variables['path'], '?');
