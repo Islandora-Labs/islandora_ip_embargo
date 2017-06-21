@@ -185,23 +185,36 @@ function islandora_ip_embargo_cron() {
 /**
  * Implements hook_preprocess_theme().
  *
- * Determine if tokenized datastream is TN and add text if the parent
- * is embargoed.
+ * Checks the path, if it's an Islandora TN DS then it uses JS to watermark
+ * the resulting image.
  */
 function islandora_ip_embargo_preprocess_image(&$variables) {
   module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
+  // XXX: We manually split up the URL here instead of using parse_url
+  // because the parse_url function interperates the : in the path as
+  // a port number and chokes if the PID is > 65535. We want to keep this
+  // check as fast as we can because it could potentially be done a large
+  // number of times in a large render array, so we don't want to load the
+  // whole islandora object, just to check the URL.
 
-  $ds = menu_get_object('islandora_tokened_datastream', 4, $variables['path']);
+  // Strip the query parameters from URL.
+  $image_path = strtok($variables['path'], '?');
+  $image_path_parts = explode('/', $image_path);
+  $size_of_image_path = count($image_path_parts);
 
-  if ($ds && $ds->id == 'TN') {
-    $embargo_result = islandora_ip_embargo_get_embargo($ds->parent->id);
+  if ($image_path_parts[$size_of_image_path - 1] == 'view' &&
+      $image_path_parts[$size_of_image_path - 2] == 'TN' &&
+      $image_path_parts[$size_of_image_path - 3] == 'datastream') {
+
+    $pid = urldecode($image_path_parts[$size_of_image_path - 4]);
+    $embargo_result = islandora_ip_embargo_get_embargo($pid);
+
+    $text = variable_get('islandora_ip_embargo_overlay_text', 'EMBARGOED');
+    $color = variable_get('islandora_ip_embargo_overlay_text_color', 'FF0000');
 
     if ($embargo_result->rowCount()) {
-      $text = variable_get('islandora_ip_embargo_overlay_text', 'EMBARGOED');
-      $color = variable_get('islandora_ip_embargo_overlay_text_color', 'FF0000');
       drupal_add_js(drupal_get_path('module', 'islandora_ip_embargo') . '/js/embargoed_images.js');
       drupal_add_js(array('islandora_ip_embargo' => array('text' => $text, 'color' => $color)), array('type' => 'setting'));
-
       if (isset($variables['#attributes']['class'])) {
         $variables['attributes']['class'] = $variables['#attributes']['class']
           . 'islandora_ip_embargo_embargoed';
