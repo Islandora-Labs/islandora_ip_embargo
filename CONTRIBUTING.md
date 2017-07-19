@@ -9,7 +9,7 @@ Please note that this project operates under the [Islandora Community Code of Co
 
 ## Workflows
 
-Islandora Committers Calls happen every Thursday at 2PM EST. The meetings are generally held on Skype, and you can join the calls by sending a request to community@islandora.ca.
+Islandora Committers Calls happen every Thursday at 2PM EST. This is a good place to discuss issues.
 This code repository is managed under the [Islandora Labs Maintainer Workflow](https://github.com/Islandora/islandora/wiki/Islandora-Labs-Maintainer-Workflow).
 
 ### Documentation
@@ -58,17 +58,6 @@ Feel free to search the issue queue for existing issues (aka tickets) that alrea
 
 That is great! In this case please send us a pull request as described in section _Create a pull request_ below.
 
-### Participate in a Release
-
-Islandora releases occur twice yearly, at the end of April and October. Two to three months before a release, a Call for Volunteers will be issued across Islandora communication channels (website, Twitter, listservs). The Release team consists of both developers and end-users who fix bugs, test fixes, verify improvements and new features; update documentation; and review README and LICENSE files. A Release VM is issued with each release so that testers can have a stable, easy-to-deploy environment in which to work.
-
-To join an Islandora Release Team, sign up for one or more modules in any of the following roles:
-
-* **Component Manager** (Very familiar with module code; reviews commits)
-* **Tester** (Tests JIRA tickets marked "Ready for test" and does a general workover of the module)
-* **Documentor** (Reviews and updates existing documentation or writes new documentation for new modules)
-* **Auditor** (Reviews and updates README and LICENSE files to ensure complaince with templates and standards)
-
 ### Contribute code
 
 Before you set out to contribute code you will need to have completed a [Contributor License Agreement](http://islandora.ca/sites/default/files/islandora_cla.pdf) or be covered by a [Corporate Contributor Licencse Agreement](http://islandora.ca/sites/default/files/islandora_ccla.pdf). The signed copy of the license agreement should be sent to <mailto:community@islandora.ca>
@@ -88,6 +77,7 @@ Contributions to the Islandora codebase should be sent as GitHub pull requests. 
     2. Comment on the issue with your plan for implementing the issue. Explain what pieces of the codebase you are going to touch and how everything is going to fit together.
     3. Islandora committers will work with you on the design to make sure you are on the right track.
     4. Implement your issue, create a pull request (see below), and iterate from there.
+    5. Any Committer who feels confident with the change(s) may merge the pull request.
 
 Developer questions? We have a lot of excellent developer documentation that can be found [here](https://github.com/islandora/islandora/wiki#documentation-for-developers).
 
@@ -110,20 +100,6 @@ need to:
 You may want to read [Syncing a fork](https://help.github.com/articles/syncing-a-fork) for instructions on how to keep your fork up to date with the latest changes of the upstream (official) `islandora` repository.
 
 Community members who have push/merge permissions on a repository should **never** push directly to a repo, nor merge their own pull requests. 
-
-#### Release branch pull requests
-
-The pull request process will roughly look like this:
-
-1. fork from Islandora repo if that has not already been done
-2. `git remote add islandora git@github.com:Islandora/islandora_checksum.git`
-3. `git pull islandora 7.x`
-4. Make changes, commit
-5. `git push origin 7.x` and issue a pull request on 7.x
-6. `git fetch --all`
-7. `git checkout 7.x-1.4` if that does not work, `git checkout islandora/7.x-1.4` then `git checkout -b 7.x-1.4`
-8. Make changes/cherry pick/copy changes from earlier, commit
-9. `git push origin 7.x-1.4` and issue a pull request on 7.x-1.4
 
 ## License Agreements
 
