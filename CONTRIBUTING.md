@@ -9,7 +9,7 @@ Please note that this project operates under the [Islandora Community Code of Co
 
 ## Workflows
 
-Islandora Committers Calls happen every Thursday at 2PM EST. The meetings are generally held on Skype, and you can join the calls by sending a request to community@islandora.ca.
+Islandora Committers Calls happen every Thursday at 2PM EST. This is a good place to discuss issues.
 This code repository is managed under the [Islandora Labs Maintainer Workflow](https://github.com/Islandora/islandora/wiki/Islandora-Labs-Maintainer-Workflow).
 
 ### Documentation
