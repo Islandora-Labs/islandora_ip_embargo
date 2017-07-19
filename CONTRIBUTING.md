@@ -77,6 +77,7 @@ Contributions to the Islandora codebase should be sent as GitHub pull requests. 
     2. Comment on the issue with your plan for implementing the issue. Explain what pieces of the codebase you are going to touch and how everything is going to fit together.
     3. Islandora committers will work with you on the design to make sure you are on the right track.
     4. Implement your issue, create a pull request (see below), and iterate from there.
+    5. Any Committer who feels confident with the change(s) may merge the pull request.
 
 Developer questions? We have a lot of excellent developer documentation that can be found [here](https://github.com/islandora/islandora/wiki#documentation-for-developers).
 
