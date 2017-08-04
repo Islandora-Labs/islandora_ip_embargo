@@ -1,15 +1,20 @@
-# Islandora IP Embargo[![Build Status](https://travis-ci.org/Islandora/islandora_ip_embargo.png?branch=7.x)](https://travis-ci.org/Islandora/islandora_ip_embargo)
+# Islandora IP Embargo[![Build Status](https://travis-ci.org/Islandora-Labs/islandora_ip_embargo.png?branch=7.x)](https://travis-ci.org/Islandora-labs/islandora_ip_embargo)
+
+## Introduction
 
 A Drupal based approach to embargoing content based on IP ranges.
-This module is not integrated with the Islandora Embargo module.
-This module breaks islandora_xml_site_map with its redirects. 
 
 ## Requirements
 
 The following Drupal modules are required:
 
 * [Islandora](https://github.com/islandora/islandora)
-* [Rules](https://drupal.org/project/rules) (While not a dependency, more functionality can be found by installing this module.)
+
+### Optional Requirements
+
+The following Drupal modules, while not required, add more functionality to this module:
+
+* [Rules](https://drupal.org/project/rules)
 
 ## Installation
 
@@ -19,7 +24,7 @@ Install as usual, see [this](https://drupal.org/documentation/install/modules-th
 
 ### Drupal cron configuration
 
-Drupal cron should be configured to run once a day to clean out expired embargoes.
+Drupal cron should be minimally configured to run once a day to clean out expired embargoes.
 
 ### Network address lists
 
@@ -69,6 +74,11 @@ Islandora IP Embargo settings can be edited in a form located at `yoursite.com/a
 ### Manage embargoed objects
 
 Go to `yoursite.com/admin/islandora/tools/ip_embargo/manage`. From there, objects can be selected and removed from their embargo by clicking the 'Delete' button. This page is also useful for finding embargoed objects to edit or examine by clicking on the desired object in the table.
+
+## Troubleshooting
+
+This module is not integrated with the Islandora Embargo module.
+This module breaks islandora_xml_site_map with its redirects. 
 
 ## Maintainers/Sponsors
 
