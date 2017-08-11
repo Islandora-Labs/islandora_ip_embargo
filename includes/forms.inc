@@ -448,7 +448,7 @@ function islandora_ip_embargo_object_embargo_form($form, &$form_state, $islandor
   $form_state['storage']['islandroa_ip_embargo']['update'] = FALSE;
   $form_state['storage']['islandroa_ip_embargo']['pid'] = $islandora_object->id;
   $list_results = islandora_ip_embargo_get_lists();
-  $options = array('none' => NULL);
+  $options = array();
   while ($data = $list_results->fetchObject()) {
     $options[$data->lid] = $data->name;
   }
@@ -458,6 +458,7 @@ function islandora_ip_embargo_object_embargo_form($form, &$form_state, $islandor
     '#title' => 'IP address range list',
     '#description' => t('The list of IP ranges for which this object will be available.  Any other network address will be blocked.'),
     '#options' => $options,
+    '#required' => TRUE,
   );
   $form['expiry_date'] = array(
     '#type' => 'date',
