@@ -448,7 +448,7 @@ function islandora_ip_embargo_object_embargo_form($form, &$form_state, $islandor
   $form_state['storage']['islandroa_ip_embargo']['update'] = FALSE;
   $form_state['storage']['islandroa_ip_embargo']['pid'] = $islandora_object->id;
   $list_results = islandora_ip_embargo_get_lists();
-  $options = array();
+  $options = array('none' => t('No IP Embargo'));
   while ($data = $list_results->fetchObject()) {
     $options[$data->lid] = $data->name;
   }
@@ -458,7 +458,7 @@ function islandora_ip_embargo_object_embargo_form($form, &$form_state, $islandor
     '#title' => 'IP address range list',
     '#description' => t('The list of IP ranges for which this object will be available.  Any other network address will be blocked.'),
     '#options' => $options,
-    '#required' => TRUE,
+    '#element_validate' => array('islandora_ip_embargo_ip_address_range_list_validate'),
   );
   $form['expiry_date'] = array(
     '#type' => 'date',
@@ -553,5 +553,21 @@ function islandora_ip_embargo_hex_validate($element, &$form_state, $form) {
   $color = $element['#value'];
   if (!(ctype_xdigit($color) && (strlen($color) === 6 || strlen($color) === 3))) {
     form_set_error('islandora_ip_embargo_overlay_text_color', t('Color must match hexideciamal format, requires 3 or 6 characters and A-F 0-9 characters apply (E.g. F0A3B1 or F1A).'));
+  }
+}
+
+/**
+ * Validate IP address range list when embargoing.
+ *
+ * @param array $element
+ *   The Drupal element data.
+ * @param array $form_state
+ *   The Drupal form state.
+ * @param array $form
+ *   The Drupal form definition.
+ */
+function  islandora_ip_embargo_ip_address_range_list_validate($element, &$form_state, $form) {
+  if (!$form_state['storage']['islandroa_ip_embargo']['update'] && ($element['#value'] == 'none')) {
+    form_set_error('islandora_ip_embargo_ip_address_list', t('This object was not previously embargoed, so setting the IP Address Range List to No IP Embargo does not change anything.'));
   }
 }
