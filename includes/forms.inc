@@ -568,6 +568,6 @@ function islandora_ip_embargo_hex_validate($element, &$form_state, $form) {
  */
 function islandora_ip_embargo_ip_address_range_list_validate($element, &$form_state, $form) {
   if (!$form_state['storage']['islandroa_ip_embargo']['update'] && ($element['#value'] == 'none')) {
-    form_set_error('islandora_ip_embargo_ip_address_list', t('This object was not previously embargoed, so setting the IP Address Range List to No IP Embargo does not change anything.'));
+    form_set_error('islandora_ip_embargo_ip_address_list', t('This object was not previously embargoed, so setting the "IP address range list" to "No IP Embargo" does not change anything.'));
   }
 }
