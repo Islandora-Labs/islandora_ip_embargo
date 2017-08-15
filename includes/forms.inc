@@ -566,7 +566,7 @@ function islandora_ip_embargo_hex_validate($element, &$form_state, $form) {
  * @param array $form
  *   The Drupal form definition.
  */
-function islandora_ip_embargo_ip_address_range_list_validate($element, array &$form_state, array $form) {
+function islandora_ip_embargo_ip_address_range_list_validate(array $element, array &$form_state, array $form) {
   if (!$form_state['storage']['islandroa_ip_embargo']['update'] && ($element['#value'] == 'none')) {
     form_set_error('islandora_ip_embargo_ip_address_list', t('This object was not previously embargoed, so setting the "IP address range list" to "No IP Embargo" does not change anything.'));
   }
