@@ -1,6 +1,17 @@
 language: php
+matrix:
+  include:
+    # Manual-built PHP 5.3.3 envs.
+    - php: 5.3.3
+      dist: precise
+      env: FEDORA_VERSION="3.5"
+    - php: 5.3.3
+      dist: precise
+      env: FEDORA_VERSION="3.6.2"
+    - php: 5.3.3
+      dist: precise
+      env: FEDORA_VERSION="3.7.0"
 php:
-  - 5.3.3
   - 5.4
   - 5.5
   - 5.6

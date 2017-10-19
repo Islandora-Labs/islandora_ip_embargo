@@ -212,6 +212,10 @@ function islandora_ip_embargo_set_embargo($islandora_object_id, $list_id, $expir
     'expiry' => $expiry,
   ))
   ->execute();
+  module_invoke_all('islandora_ip_embargo_set', $islandora_object_id, array(
+    'lid' => $list_id,
+    'expiry' => $expiry,
+  ));
 }
 
 /**
@@ -224,6 +228,7 @@ function islandora_ip_embargo_remove_embargo($islandora_object_id) {
   db_delete('islandora_ip_embargo_embargoes')
   ->condition('pid', $islandora_object_id)
   ->execute();
+  module_invoke_all('islandora_ip_embargo_lifted', $islandora_object_id);
 }
 
 /**
