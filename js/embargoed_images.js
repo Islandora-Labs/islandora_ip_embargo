@@ -20,4 +20,4 @@ Drupal.behaviors.islandora_ip_embargo = {
         });
     });
   }};
-})(jQuery);
+})(jQuery, Drupal);
