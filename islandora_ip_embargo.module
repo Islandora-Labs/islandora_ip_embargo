@@ -113,26 +113,6 @@ function islandora_ip_embargo_menu() {
 /**
  * Implements hook_islandora_object_access().
  *
- * This will let TNs through for embargoed objects.
- */
-function islandora_ip_embargo_islandora_datastream_access($op, $islandora_datastream, $user) {
-  module_load_include('inc', 'islandora_ip_embargo', 'includes/utilities');
-  // If we're looking for a thumbnail let it through.
-  $restrict_access = islandora_ip_embargo_restrict_access($islandora_datastream->parent->id);
-  if ($islandora_datastream->id == 'TN' && $restrict_access) {
-    return TRUE;
-  }
-  elseif ($restrict_access) {
-    return FALSE;
-  }
-
-  // If we found no issues we let things proceed.
-  return NULL;
-}
-
-/**
- * Implements hook_islandora_object_access().
- *
  * Checks for an IP address embargo and handles redirects if necessary.
  */
 function islandora_ip_embargo_islandora_object_access($op, $islandora_object, $user) {
@@ -224,4 +204,21 @@ function islandora_ip_embargo_preprocess_image(&$variables) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_islandora_access_override_datastream_handlers().
+ */
+function islandora_ip_embargo_islandora_access_override_datastream_handlers() {
+  $mod_path = drupal_get_path('module', 'islandora_ip_embargo');
+  $handlers = array();
+
+  $handlers[ISLANDORA_VIEW_OBJECTS] = array(
+    array(
+      'callable' => 'islandora_ip_embargo_thumbnail_access_callback',
+      'file' => "$mod_path/includes/datastream.access-override.inc",
+    ),
+  );
+
+  return $handlers;
 }
