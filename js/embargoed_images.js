@@ -2,10 +2,11 @@
  * @file
  * Show the overlay text for embargoed items.
  */
+
 (function ($, Drupal) {
 Drupal.behaviors.islandora_ip_embargo = {
-  attach: function(context, settings) {
-    $('img.islandora_ip_embargo_embargoed', context).once('islandora-ip-embargo-overlay', function() {
+  attach: function (context, settings) {
+    $('img.islandora_ip_embargo_embargoed', context).once('islandora-ip-embargo-overlay', function () {
       $(this).wrap('<div style="position:relative;"></div>');
       $(this).after('<span class="islandora_ip_embargo_embargoed"></span>');
       $(this).nextAll('span:first')

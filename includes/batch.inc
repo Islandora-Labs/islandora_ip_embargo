@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Holds batch operations for the islandora_ip_embargo module.
@@ -9,7 +10,7 @@
  *
  * @param int $event_threshold
  *   Timestamp: anything expiring after this time will send out an event.
- * @param array $context
+ * @param array|DrushBatchContext $context
  *   The batch context.
  */
 function islandora_ip_embargo_embargo_lift_event_batch($event_threshold, &$context) {

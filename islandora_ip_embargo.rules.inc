@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Holds rule hooks for islandroa_ip_embargo.
