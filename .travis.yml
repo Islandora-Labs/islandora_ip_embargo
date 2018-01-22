@@ -29,8 +29,8 @@ before_install:
   - git clone -b 7.x git://github.com/Islandora/islandora.git
   - export ISLANDORA_DIR=$HOME/islandora
   - $HOME/islandora/tests/scripts/travis_setup.sh
-  - git clone -b 7.x git://github.com/discoverygarden/islandora_access_override.git sites/all/modules/islandora_access_override
   - cd $HOME/drupal-*
+  - git clone -b 7.x git://github.com/discoverygarden/islandora_access_override.git sites/all/modules/islandora_access_override
   - ln -s $TRAVIS_BUILD_DIR sites/all/modules/islandora_ip_embargo
   - drush en --yes islandora_ip_embargo
 script:
