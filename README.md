@@ -9,6 +9,7 @@ A Drupal based approach to embargoing content based on IP ranges.
 The following Drupal modules are required:
 
 * [Islandora](https://github.com/islandora/islandora)
+* [Islandora Access Override](https://github.com/discoverygarden/islandora_access_override)
 
 ### Optional Requirements
 

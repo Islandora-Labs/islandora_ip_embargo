@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Holds default rules for islandroa_ip_embargo.
@@ -19,8 +20,7 @@ function islandora_ip_embargo_default_rules_configuration() {
     ->action('mail', array(
       'to' => '[site:mail]',
       'subject' => '[site:name] "[embargoed_object:label]" will have its embargo lifted.',
-      'message' => '[embargoed_object:label] with PID [embargoed_object:id] at ' .
-        '[site:url]/islandora/object/[embargoed_object:id] is having its embargo lifted.',
+      'message' => '[embargoed_object:label] with PID [embargoed_object:id] at [site:url]/islandora/object/[embargoed_object:id] is having its embargo lifted.',
     )
   );
 
